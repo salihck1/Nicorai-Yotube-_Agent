@@ -50,7 +50,7 @@ router.post('/', async (req, res) => {
         genre: data.genre,
         content: data.content,
         timestamp: data.timestamp,
-        status: 'approved',
+        status: 'pending',
         media: data.media,
         driveLink: responseData.path || null,
       });

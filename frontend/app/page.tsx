@@ -672,7 +672,7 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-[calc(100vh-64px)] flex flex-col items-center justify-center p-4">
+    <main className="min-h-[calc(100vh-64px)] flex flex-col items-center justify-center p-4 pt-20">
       <Drawer
         newProject={
           mediaGenerated ? (

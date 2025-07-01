@@ -20,14 +20,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} bg-gray-900 text-gray-100`}>
-        <header className="bg-gray-800 shadow-md p-2 flex items-center justify-center">
+        <header className="bg-gray-800 shadow-md p-2 flex items-center justify-center fixed top-0 left-0 w-full z-50" style={{height: '72px'}}>
           <YouTubeIcon />
           <div className="ml-3">
             <h1 className="text-2xl font-bold text-red-500">Script Studio</h1>
             <p className="text-sm text-gray-400">YouTube Content Creator</p>
           </div>
         </header>
-        {children}
+        <div style={{paddingTop: '72px'}}>{children}</div>
       </body>
     </html>
   )
