@@ -565,14 +565,16 @@ export default function Home() {
         ...localImages.map((img: any, index: number) => ({
           ...img,
           type: 'image',
-          url: img.src.split(',')[1] || img.src,
+          url: img.driveLink || img.src,
+          proxyUrl: img.src,
           id: index + 1,
           totalItems: localImages.length
         })),
         ...localAudio.map((audio: any, index: number) => ({
           ...audio,
           type: 'music',
-          url: audio.src.split(',')[1] || audio.src,
+          url: audio.driveLink || audio.src,
+          proxyUrl: audio.src,
           id: index + 1,
           totalItems: localAudio.length,
           name: audio.name,
@@ -581,7 +583,8 @@ export default function Home() {
         ...localVideos.map((video: any, index: number) => ({
           ...video,
           type: 'visual',
-          url: video.src.split(',')[1] || video.src,
+          url: video.driveLink || video.src,
+          proxyUrl: video.src,
           id: index + 1,
           totalItems: localVideos.length,
           name: video.name,
@@ -590,7 +593,8 @@ export default function Home() {
         ...localThumbnails.map((thumb: any, index: number) => ({
           ...thumb,
           type: 'thumbnail',
-          url: thumb.src.split(',')[1] || thumb.src,
+          url: thumb.driveLink || thumb.src,
+          proxyUrl: thumb.src,
           id: index + 1,
           totalItems: localThumbnails.length
         })),

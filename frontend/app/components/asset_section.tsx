@@ -108,16 +108,17 @@ export default function AssetSection({
       const result = await uploadToBackend(file, type);
       const date = new Date().toLocaleString();
       const proxyLink = `http://localhost:5000/proxy/${result.fileId}`;
+      // Store both proxy and Google Drive links
       if (type === 'thumbnails') {
-        setLocalThumbnails(prev => [{ src: proxyLink, alt: result.name, date, isDrive: true }, ...prev]);
+        setLocalThumbnails(prev => [{ src: proxyLink, driveLink: result.link, alt: result.name, date, isDrive: true }, ...prev]);
       } else if (type === 'images') {
-        setLocalImages(prev => [{ src: proxyLink, alt: result.name, date, isDrive: true }, ...prev]);
+        setLocalImages(prev => [{ src: proxyLink, driveLink: result.link, alt: result.name, date, isDrive: true }, ...prev]);
       } else if (type === 'audio') {
-        setLocalAudio(prev => [{ src: proxyLink, name: result.name, mimeType: file.type, date, isDrive: true }, ...prev]);
+        setLocalAudio(prev => [{ src: proxyLink, driveLink: result.link, name: result.name, mimeType: file.type, date, isDrive: true }, ...prev]);
       } else if (type === 'videos') {
-        setLocalVideos(prev => [{ src: proxyLink, name: result.name, mimeType: file.type, date, isDrive: true }, ...prev]);
+        setLocalVideos(prev => [{ src: proxyLink, driveLink: result.link, name: result.name, mimeType: file.type, date, isDrive: true }, ...prev]);
       }
-      alert('Upload successful! File link: ' + proxyLink);
+      alert('Upload successful! File link: ' + result.link);
     } catch (err: any) {
       alert('Upload failed: ' + err.message);
     }

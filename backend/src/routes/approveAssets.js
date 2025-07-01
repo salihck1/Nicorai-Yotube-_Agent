@@ -11,10 +11,20 @@ router.post('/', async (req, res) => {
     if (!data.content || !data.media) {
       return res.status(400).json({ error: 'Missing required fields: content and media' });
     }
+    // Transform Uploaded_media and media to set url as driveLink and move proxy URL to proxyUrl
+    const transformMediaArray = (arr) =>
+      Array.isArray(arr)
+        ? arr.map(item => ({
+            ...item,
+            proxyUrl: item.url || item.src,
+            url: item.driveLink || item.url || item.src,
+          }))
+        : arr;
+
     const payload = {
       content: data.content,
-      media: data.media,
-      Uploaded_media: data.Uploaded_media,
+      media: transformMediaArray(data.media),
+      Uploaded_media: transformMediaArray(data.Uploaded_media),
       responseId: data.responseId,
       timestamp: data.timestamp,
       status: 'approved',
