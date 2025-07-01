@@ -5,6 +5,9 @@ import TopicSection from './components/topic_section'
 import ScriptSection from './components/script_section'
 import AssetSection from './components/asset_section'
 import { useRouter } from 'next/navigation'
+import Drawer from './components/Drawer'
+import PendingUploadsTab from './components/PendingUploadsTab'
+import UploadedVideosTab from './components/UploadedVideosTab'
 
 interface FormData {
   topic: string
@@ -670,58 +673,64 @@ export default function Home() {
 
   return (
     <main className="min-h-[calc(100vh-64px)] flex flex-col items-center justify-center p-4">
-      {mediaGenerated ? (
-        <AssetSection 
-          generatedMedia={generatedMedia}
-          regeneratingAsset={regeneratingAsset}
-          isApprovingAssets={isApprovingAssets}
-          showSuccessMessage={showSuccessMessage}
-          mediaRefs={mediaRefs}
-          handleRegenerateMedia={handleRegenerateMedia}
-          handleMediaPlay={handleMediaPlay}
-          handleApproveAssets={handleApproveAssets}
-          setMediaGenerated={setMediaGenerated}
-          localImages={localImages}
-          setLocalImages={setLocalImages}
-          localAudio={localAudio}
-          setLocalAudio={setLocalAudio}
-          localVideos={localVideos}
-          setLocalVideos={setLocalVideos}
-          localThumbnails={localThumbnails}
-          setLocalThumbnails={setLocalThumbnails}
-        />
-      ) : !hasScript ? (
-        <TopicSection 
-          formData={formData}
-          setFormData={setFormData}
-          handleSubmit={handleSubmit}
-          isLoading={isLoading}
-        />
-      ) : (
-        <ScriptSection 
-          formData={formData}
-          script={script}
-          editedScript={editedScript}
-          setEditedScript={setEditedScript}
-          isEditing={isEditing}
-          setIsEditing={setIsEditing}
-          statusMessage={statusMessage}
-          videoUrl={videoUrl}
-          feedback={feedback}
-          setFeedback={setFeedback}
-          isProcessing={isProcessing}
-          isGeneratingMedia={isGeneratingMedia}
-          loadingProgress={loadingProgress}
-          handleSaveEdit={handleSaveEdit}
-          handleDownloadScript={handleDownloadScript}
-          handleApproveOrRefineScript={handleApproveOrRefineScript}
-          setHasScript={setHasScript}
-          setScript={setScript}
-          setVideoUrl={setVideoUrl}
-          setVideoApproval={setVideoApproval}
-          setMediaGenerated={setMediaGenerated}
-        />
-      )}
+      <Drawer
+        newProject={
+          mediaGenerated ? (
+            <AssetSection 
+              generatedMedia={generatedMedia}
+              regeneratingAsset={regeneratingAsset}
+              isApprovingAssets={isApprovingAssets}
+              showSuccessMessage={showSuccessMessage}
+              mediaRefs={mediaRefs}
+              handleRegenerateMedia={handleRegenerateMedia}
+              handleMediaPlay={handleMediaPlay}
+              handleApproveAssets={handleApproveAssets}
+              setMediaGenerated={setMediaGenerated}
+              localImages={localImages}
+              setLocalImages={setLocalImages}
+              localAudio={localAudio}
+              setLocalAudio={setLocalAudio}
+              localVideos={localVideos}
+              setLocalVideos={setLocalVideos}
+              localThumbnails={localThumbnails}
+              setLocalThumbnails={setLocalThumbnails}
+            />
+          ) : !hasScript ? (
+            <TopicSection 
+              formData={formData}
+              setFormData={setFormData}
+              handleSubmit={handleSubmit}
+              isLoading={isLoading}
+            />
+          ) : (
+            <ScriptSection 
+              formData={formData}
+              script={script}
+              editedScript={editedScript}
+              setEditedScript={setEditedScript}
+              isEditing={isEditing}
+              setIsEditing={setIsEditing}
+              statusMessage={statusMessage}
+              videoUrl={videoUrl}
+              feedback={feedback}
+              setFeedback={setFeedback}
+              isProcessing={isProcessing}
+              isGeneratingMedia={isGeneratingMedia}
+              loadingProgress={loadingProgress}
+              handleSaveEdit={handleSaveEdit}
+              handleDownloadScript={handleDownloadScript}
+              handleApproveOrRefineScript={handleApproveOrRefineScript}
+              setHasScript={setHasScript}
+              setScript={setScript}
+              setVideoUrl={setVideoUrl}
+              setVideoApproval={setVideoApproval}
+              setMediaGenerated={setMediaGenerated}
+            />
+          )
+        }
+        pendingUploads={<PendingUploadsTab />}
+        uploadedVideos={<UploadedVideosTab />}
+      />
     </main>
   );
 }
