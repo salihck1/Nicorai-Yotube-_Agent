@@ -67,7 +67,7 @@ router.post('/', upload.single('video'), async (req, res) => {
       return res.status(502).json({ error: 'n8n webhook failed', details: await n8nRes.text() });
     }
     const n8nData = await n8nRes.json();
-    const youtubeLink = n8nData.youtubeLink || n8nData.youtube_url || n8nData.link;
+    const youtubeLink = n8nData.youtubeLink || n8nData.youtube_url || n8nData.link || n8nData.youtubelink;
     if (!youtubeLink) {
       return res.status(502).json({ error: 'No YouTube link returned from n8n', details: n8nData });
     }

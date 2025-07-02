@@ -81,30 +81,44 @@ export default function AssetSection({
   // Helper for file upload
   const uploadToBackend = async (file: File, type: 'thumbnails' | 'images' | 'audio' | 'videos') => {
     // Map frontend type to backend endpoint
-    let backendType = type;
+    let backendType: string = type;
     if (type === 'thumbnails') backendType = 'thumbnail';
     if (type === 'videos') backendType = 'video';
 
     const formData = new FormData();
     formData.append('file', file);
 
+    // Log the file and type being uploaded
+    console.log('Uploading asset to backend:', { fileName: file.name, fileSize: file.size, type, backendType });
+    console.log('FormData:', Array.from(formData.entries()));
+
     const response = await fetch(`http://localhost:5000/upload/${backendType}`, {
       method: 'POST',
       body: formData,
     });
 
+    console.log('Response status:', response.status);
+
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Upload failed. Status:', response.status, 'Response:', errorText);
       throw new Error('Upload failed');
     }
 
-    return await response.json(); // { success, fileId, name, link }
+    const data = await response.json();
+    console.log('Upload successful. Response data:', data);
+    return data; // { success, fileId, name, link }
   };
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>, type: 'thumbnails' | 'images' | 'audio' | 'videos') => {
     const file = e.target.files && e.target.files[0];
-    if (!file) return;
+    if (!file) {
+      console.log('No file selected for upload.');
+      return;
+    }
 
     try {
+      console.log('Starting upload for file:', file.name, 'of type:', type);
       const result = await uploadToBackend(file, type);
       const date = new Date().toLocaleString();
       const proxyLink = `http://localhost:5000/proxy/${result.fileId}`;
@@ -118,8 +132,10 @@ export default function AssetSection({
       } else if (type === 'videos') {
         setLocalVideos(prev => [{ src: proxyLink, driveLink: result.link, name: result.name, mimeType: file.type, date, isDrive: true }, ...prev]);
       }
+      console.log('Upload successful! File link:', result.link);
       alert('Upload successful! File link: ' + result.link);
     } catch (err: any) {
+      console.error('Upload failed:', err);
       alert('Upload failed: ' + err.message);
     }
   };
@@ -604,9 +620,13 @@ export default function AssetSection({
             />
             <div className="flex gap-4 w-full justify-end">
               <button
-                onClick={() => setShowFeedbackModal(false)}
+                onClick={() => {
+                  setShowFeedbackModal(false);
+                  setFeedbackValue('');
+                  setRegenTarget(null);
+                  setIsRegenerating(false);
+                }}
                 className="bg-gray-600 text-white py-2 px-6 rounded-full hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 font-semibold transition-colors duration-200"
-                disabled={isRegenerating}
               >
                 Cancel
               </button>

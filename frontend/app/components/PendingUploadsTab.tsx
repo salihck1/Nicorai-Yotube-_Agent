@@ -54,22 +54,47 @@ export default function PendingUploadsTab() {
 
   const handleUploadNow = async (projectId: string) => {
     const file = uploadedVideoFiles[projectId];
-    if (!file) return;
+    if (!file) {
+      console.log('No file selected for project:', projectId);
+      return;
+    }
     setUploading(prev => ({ ...prev, [projectId]: true }));
     const formData = new FormData();
     formData.append('video', file);
     formData.append('projectId', projectId);
+
+    // Log the form data keys and values
+    console.log('Uploading video for project:', projectId);
+    Array.from(formData.entries()).forEach(([key, value]) => {
+      if (value instanceof File) {
+        console.log(`FormData: ${key} = File(name=${value.name}, size=${value.size})`);
+      } else {
+        console.log(`FormData: ${key} = ${value}`);
+      }
+    });
+
     try {
+      console.log('Sending POST request to /api/upload-video...');
       const res = await fetch('http://localhost:5000/api/upload-video', {
         method: 'POST',
         body: formData,
       });
-      if (!res.ok) throw new Error('Upload failed');
+      console.log('Response status:', res.status);
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error('Upload failed. Status:', res.status, 'Response:', errorText);
+        throw new Error('Upload failed');
+      }
+
       // Optionally show a success message
+      console.log('Upload successful for project:', projectId);
+
       // Refresh the pending projects list
       setUploadedVideos(prev => { const copy = { ...prev }; delete copy[projectId]; return copy; });
       setUploadedVideoFiles(prev => { const copy = { ...prev }; delete copy[projectId]; return copy; });
       setUploading(prev => { const copy = { ...prev }; delete copy[projectId]; return copy; });
+
       // Re-fetch projects
       setLoading(true);
       fetch('http://localhost:5000/api/pending-projects')

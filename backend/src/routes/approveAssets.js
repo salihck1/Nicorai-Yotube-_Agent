@@ -60,7 +60,7 @@ router.post('/', async (req, res) => {
         genre: data.genre,
         content: data.content,
         timestamp: data.timestamp,
-        status: 'pending',
+        status: responseData.status || pending,
         media: data.media,
         driveLink: responseData.path || null,
         youtubeLink: responseData.youtubelink || null

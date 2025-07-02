@@ -701,7 +701,7 @@ export default function Home() {
       const res = await fetch('https://n8n.srv810314.hstgr.cloud/webhook/avatarscript', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ topic: avatarFormData.topic }),
+        body: JSON.stringify({ topic: avatarFormData.topic, tone: avatarFormData.tone, genre: avatarFormData.genre, time: avatarFormData.time }),
       });
       if (!res.ok) throw new Error('Failed to generate script');
       const data = await res.json();
