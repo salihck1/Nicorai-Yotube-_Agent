@@ -4,16 +4,18 @@ interface DrawerProps {
   newProject: ReactNode;
   pendingUploads: ReactNode;
   uploadedVideos: ReactNode;
+  createAvatarVideo?: ReactNode;
 }
 
 const tabList = [
   { key: 'new', label: 'New Project' },
+  { key: 'avatar', label: 'Create Avatar Video' },
   { key: 'pending', label: 'Pending Uploads' },
   { key: 'uploaded', label: 'Uploaded Videos' },
 ];
 
-export default function Drawer({ newProject, pendingUploads, uploadedVideos }: DrawerProps) {
-  const [selectedTab, setSelectedTab] = useState<'new' | 'pending' | 'uploaded'>('new');
+export default function Drawer({ newProject, pendingUploads, uploadedVideos, createAvatarVideo }: DrawerProps) {
+  const [selectedTab, setSelectedTab] = useState<'new' | 'pending' | 'uploaded' | 'avatar'>('new');
 
   return (
     <div className="flex w-full" style={{ minHeight: 'calc(100vh - 72px)' }}>
@@ -35,6 +37,7 @@ export default function Drawer({ newProject, pendingUploads, uploadedVideos }: D
       {/* Tab Content */}
       <div className="flex-1 flex items-start justify-center ml-64">
         {selectedTab === 'new' && newProject}
+        {selectedTab === 'avatar' && (createAvatarVideo || <div className="w-full max-w-2xl bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-700 flex flex-col items-center justify-center min-h-[300px]"><h2 className="text-2xl font-bold text-white mb-4">Create Avatar Video</h2><p className="text-gray-400">This is a placeholder for the Create Avatar Video tab.</p></div>)}
         {selectedTab === 'pending' && pendingUploads}
         {selectedTab === 'uploaded' && uploadedVideos}
       </div>

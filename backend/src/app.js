@@ -7,6 +7,7 @@ const approveAssetsRoutes = require('./routes/approveAssets');
 const mediaRegenerateRoutes = require('./routes/mediaRegenerate');
 const pendingProjectsRoutes = require('./routes/pendingProjects');
 const uploadVideoRoutes = require('./routes/uploadVideo');
+const proxyAvatarRoutes = require('./routes/proxyAvatar');
 const mongoose = require('mongoose');
 
 const app = express();
@@ -26,6 +27,7 @@ app.use('/approve-assets', approveAssetsRoutes);
 app.use('/media-regenerate', mediaRegenerateRoutes);
 app.use('/api/pending-projects', pendingProjectsRoutes);
 app.use('/api/upload-video', uploadVideoRoutes);
+app.use('/api/proxy-avatar', proxyAvatarRoutes);
 
 const PORT = process.env.PORT || 5000;
 

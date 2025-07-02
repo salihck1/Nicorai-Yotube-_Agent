@@ -12,13 +12,14 @@ interface TopicSectionProps {
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
   handleSubmit: (e: React.FormEvent) => Promise<void>;
   isLoading: boolean;
+  title?: string;
 }
 
-export default function TopicSection({ formData, setFormData, handleSubmit, isLoading }: TopicSectionProps) {
+export default function TopicSection({ formData, setFormData, handleSubmit, isLoading, title }: TopicSectionProps) {
   return (
     <div className="w-full max-w-2xl bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-700">
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-white mb-2">Create Your YouTube Script</h1>
+        <h1 className="text-3xl font-bold text-white mb-2">{title || 'Create Your YouTube Script'}</h1>
         <p className="text-gray-400">Generate engaging, professional scripts for your YouTube videos</p>
       </div>
       <form onSubmit={handleSubmit} className="space-y-6">

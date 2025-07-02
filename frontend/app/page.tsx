@@ -48,6 +48,24 @@ export default function Home() {
   const [localAudio, setLocalAudio] = useState<any[]>([])
   const [localVideos, setLocalVideos] = useState<any[]>([])
   const [localThumbnails, setLocalThumbnails] = useState<any[]>([])
+  const [avatarFormData, setAvatarFormData] = useState<FormData>({
+    topic: '',
+    tone: 'Professional',
+    genre: 'Educational',
+    time: '20',
+  })
+  const [avatarScript, setAvatarScript] = useState('');
+  const [avatarEditedScript, setAvatarEditedScript] = useState('');
+  const [avatarIsEditing, setAvatarIsEditing] = useState(false);
+  const [avatarStatusMessage, setAvatarStatusMessage] = useState('');
+  const [avatarFeedback, setAvatarFeedback] = useState('');
+  const [avatarIsProcessing, setAvatarIsProcessing] = useState(false);
+  const [avatarIsGeneratingMedia, setAvatarIsGeneratingMedia] = useState(false);
+  const [avatarLoadingProgress, setAvatarLoadingProgress] = useState(0);
+  const [avatarHasScript, setAvatarHasScript] = useState(false);
+  const [avatarVideoUrl, setAvatarVideoUrl] = useState<string | null>(null);
+  const [avatarVideoApproval, setAvatarVideoApproval] = useState<'approved' | 'rejected' | null>(null);
+  const [avatarApprovedVideoUrl, setAvatarApprovedVideoUrl] = useState<string | null>(null);
   const router = useRouter()
   
   const extractGoogleDriveFileId = (url: string) => {
@@ -675,6 +693,72 @@ export default function Home() {
     }
   };
 
+  async function handleAvatarSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setAvatarIsProcessing(true);
+    setAvatarHasScript(false);
+    try {
+      const res = await fetch('https://n8n.srv810314.hstgr.cloud/webhook/avatarscript', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ topic: avatarFormData.topic }),
+      });
+      if (!res.ok) throw new Error('Failed to generate script');
+      const data = await res.json();
+      const scriptText = data.content?.text || data.text || JSON.stringify(data);
+      setAvatarScript(scriptText);
+      setAvatarEditedScript(scriptText);
+      setAvatarHasScript(true);
+      setAvatarStatusMessage('Script approved!');
+      if (data && data.video && data.video.url) {
+        setAvatarApprovedVideoUrl(data.video.url);
+      } else {
+        setAvatarApprovedVideoUrl(null);
+        setAvatarStatusMessage('Error occurred while generating avatar video.');
+      }
+    } catch (err) {
+      setAvatarScript('Failed to generate script.');
+      setAvatarEditedScript('Failed to generate script.');
+      setAvatarHasScript(true);
+    } finally {
+      setAvatarIsProcessing(false);
+    }
+  }
+
+  const avatarImages = [
+    'https://files2.heygen.ai/avatar/v3/0233ba6aea01411ab07ddafbf97886f2_39260/preview_talk_2.webp',
+    'https://files2.heygen.ai/avatar/v3/167f0f21269445be8eb3964aee62bbad_38050/preview_target.webp',
+    'https://files2.heygen.ai/talking_photo/1512b3ac56b04ec19b84d641da9eee4e/6e0198bd7feb405fb35fe4e8921c8fd4.webp?Expires=1751748880&Signature=QYfLhK5u~J9uQoLDHQmWbfpGRZA7DTvj0-QkIWEDhk4AW8pgqieeFEU0PmkJHEYHGifUEVeg1pi0Tu7FROE4qwAGlx4zmiVJX4G38-si7sBL7Ie3VdsRrvJBmPnEzdWu5yiK0z7tI4jnTmkWL7eSlw5OtE1EmXcBNjS6xLENOGHcgjNgs-nPtLPgJiQtWY-pXeqdSjIkTiP18LAYP99t~57ZyVeiyBT0b4YkHzJX-Oey5KWbaPbW6jEuQA3DQx2skkOgRabAcdPbUAc7zw~Xap5hTZDVQdCEsqZ-Z0W43y~PRaZernw4W-Ky0dam1FppfnUNeG9kPjSINcBtvf6NWw__&Key-Pair-Id=K38HBHX5LX3X2H',
+    'https://files2.heygen.ai/talking_photo/4ca09224d71148679a355aabd2863297/ecfc1d76b069474dbef892a0b0e15c58.WEBP?Expires=1751567871&Signature=U~HU~uMHMznJ2tF20XJHm3cMu~ryOm8nuL0P0vEcxAiKVNPsZ~L3c1Jtl4DyOdMKUk813myCox9glCXD1zpi9uBaGb5KXjx0IblUwfodLcTVu1MJl7lFeVyO8sQD0l4t4UDQyMYPNPfN2FYZiiD0sAiV8OZzRFxGo2T7CzOgkjiN9n6QKyg3jcgQpwScLHqgrEJNcFJy-Db~fnkVGZR4RtVCnfFNmm2XAAdNOKHAKxAfb9PqBEBp7yozi0WL1U0t~mRz9I~jpv-dXV-ieptpq7ksHF74oKL3i49dpGFyG51L2A5i8lf9VuxG-8bchtOg8lQskqnwvZ7AkS1sCL~e9A__&Key-Pair-Id=K38HBHX5LX3X2H',
+  ];
+  const avatarNames = [
+    'Amelia',
+    'Leos',
+    'Tom',
+    'Violet',
+  ];
+  const avatarIds = [
+    'Amelia_sitting_business_training_front',
+    'Leos_sitting_office_front',
+    'f41cc08abdcf4741b7949dfb3d1527f5',
+    '0c72b426556c48a8982c22298c117610',
+  ];
+  const voiceIds = [
+    'dc44cce2502749a389d12b9baf4a0e5f',
+    'e0beae5b24a843b7a9ea021c1db975dd',
+    '8445e1a518c74304bcaa5b793d1b2f54',
+    'ec971490059245d3953fd895ee37ab09',
+  ];
+  const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
+  const [selectedAvatarId, setSelectedAvatarId] = useState<string | null>(null);
+  const [selectedVoiceId, setSelectedVoiceId] = useState<string | null>(null);
+
+  // When a new script is generated or entering the page, reset video and status message
+  useEffect(() => {
+    setAvatarApprovedVideoUrl(null);
+    setAvatarStatusMessage('');
+  }, [avatarScript]); // or use avatarFormData.topic if that's the trigger for new script
+
   return (
     <main className="min-h-[calc(100vh-64px)] flex flex-col items-center justify-center p-4 pt-20">
       <Drawer
@@ -729,6 +813,130 @@ export default function Home() {
               setVideoUrl={setVideoUrl}
               setVideoApproval={setVideoApproval}
               setMediaGenerated={setMediaGenerated}
+            />
+          )
+        }
+        createAvatarVideo={
+          avatarHasScript ? (
+            <div className="flex flex-col items-center w-full">
+              <ScriptSection
+                formData={avatarFormData}
+                script={avatarScript}
+                editedScript={avatarEditedScript}
+                setEditedScript={setAvatarEditedScript}
+                isEditing={avatarIsEditing}
+                setIsEditing={setAvatarIsEditing}
+                statusMessage={avatarStatusMessage}
+                videoUrl={avatarVideoUrl}
+                feedback={avatarFeedback}
+                setFeedback={setAvatarFeedback}
+                isProcessing={avatarIsProcessing}
+                isGeneratingMedia={avatarIsGeneratingMedia}
+                loadingProgress={avatarLoadingProgress}
+                handleSaveEdit={() => {
+                  setAvatarScript(avatarEditedScript);
+                  setAvatarIsEditing(false);
+                  setAvatarStatusMessage('Script updated successfully!');
+                  setTimeout(() => setAvatarStatusMessage(''), 2000);
+                }}
+                handleDownloadScript={() => {
+                  // Download logic for avatar script
+                  const blob = new Blob([avatarScript], { type: 'text/plain' });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = 'avatar_script.txt';
+                  a.click();
+                  URL.revokeObjectURL(url);
+                }}
+                handleApproveOrRefineScript={async () => {
+                  setAvatarIsProcessing(true);
+                  console.log('Approve Script clicked: starting avatar video generation');
+                  // Send topic, avatarId, and script to backend proxy
+                  try {
+                    console.log('Sending POST to /api/proxy-avatar with:', {
+                      topic: avatarFormData.topic,
+                      avatarId: selectedAvatarId,
+                      script: avatarScript,
+                      voiceId: selectedVoiceId,
+                    });
+                    const res = await fetch('http://localhost:5000/api/proxy-avatar', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({
+                        topic: avatarFormData.topic,
+                        avatarId: selectedAvatarId,
+                        script: avatarScript,
+                        voiceId: selectedVoiceId,
+                      }),
+                    });
+                    console.log('Received response from backend (raw):', res);
+                    let data;
+                    try {
+                      data = await res.clone().json();
+                      console.log('Response JSON from backend:', data);
+                    } catch (jsonErr) {
+                      console.error('Error parsing JSON from backend:', jsonErr);
+                      data = null;
+                    }
+                    if (res.ok && data && data.video && data.video.url) {
+                      setAvatarApprovedVideoUrl(data.video.url);
+                      setAvatarStatusMessage('Script approved!');
+                    } else {
+                      setAvatarApprovedVideoUrl(null);
+                      setAvatarStatusMessage('Error occurred while generating avatar video.');
+                    }
+                  } catch (err) {
+                    console.error('Error during avatar video generation:', err);
+                    setAvatarStatusMessage('Failed to generate avatar video.');
+                  } finally {
+                    setAvatarIsProcessing(false);
+                    console.log('Avatar video generation process finished.');
+                  }
+                }}
+                setHasScript={setAvatarHasScript}
+                setScript={setAvatarScript}
+                setVideoUrl={setAvatarVideoUrl}
+                setVideoApproval={setAvatarVideoApproval}
+                setMediaGenerated={() => {}}
+                approveDisabled={!selectedAvatar}
+              />
+              {/* Avatar selection section */}
+              <div className="w-full max-w-4xl mt-8 flex flex-col items-center">
+                <h3 className="text-xl font-bold text-white mb-4">Select an Avatar</h3>
+                <div className="flex gap-6 justify-center">
+                  {avatarImages.map((src, idx) => (
+                    <div key={src} className="flex flex-col items-center">
+                      <button
+                        className={`rounded-full border-4 transition-all duration-200 ${selectedAvatar === src ? 'border-red-500 scale-110' : 'border-transparent'} focus:outline-none`}
+                        onClick={() => { setSelectedAvatar(src); setSelectedAvatarId(avatarIds[idx]); setSelectedVoiceId(voiceIds[idx]); }}
+                      >
+                        <img src={src} alt={avatarNames[idx]} className="w-32 h-32 rounded-full object-cover" />
+                      </button>
+                      <span className="mt-2 text-white font-medium text-lg">{avatarNames[idx]}</span>
+                    </div>
+                  ))}
+                </div>
+                {!selectedAvatar && <p className="text-red-400 mt-4">Please select an avatar to approve the script.</p>}
+              </div>
+              {/* Video player after approval */}
+              {avatarApprovedVideoUrl && (
+                <div className="w-full max-w-2xl mt-10 flex flex-col items-center">
+                  <h3 className="text-xl font-bold text-white mb-4">Generated Avatar Video</h3>
+                  <video src={avatarApprovedVideoUrl} controls className="w-full rounded-lg bg-black" />
+                </div>
+              )}
+              {avatarStatusMessage && (
+                <div className="text-green-400 mt-4">{avatarStatusMessage}</div>
+              )}
+            </div>
+          ) : (
+            <TopicSection
+              formData={avatarFormData}
+              setFormData={setAvatarFormData}
+              handleSubmit={handleAvatarSubmit}
+              isLoading={avatarIsProcessing}
+              title="Create Avatar Video"
             />
           )
         }

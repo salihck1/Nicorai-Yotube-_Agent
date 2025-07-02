@@ -63,6 +63,7 @@ router.post('/', async (req, res) => {
         status: 'pending',
         media: data.media,
         driveLink: responseData.path || null,
+        youtubeLink: responseData.youtubelink || null
       });
     } catch (dbErr) {
       console.error('Failed to save ScriptHistory:', dbErr);
