@@ -17,7 +17,8 @@ const scriptHistorySchema = new mongoose.Schema({
   media: [mediaSchema],
   driveLink: String,
   youtubeLink: String,
-  feedback: String
+  feedback: String,
+  title: String
 });
 
 module.exports = mongoose.model('ScriptHistory', scriptHistorySchema); 

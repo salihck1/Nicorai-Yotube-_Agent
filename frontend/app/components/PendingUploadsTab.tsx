@@ -117,7 +117,12 @@ export default function PendingUploadsTab() {
         <p className="text-gray-400">Loading...</p>
       ) : error ? (
         <p className="text-red-400">{error}</p>
-      ) : pendingProjects.length === 0 ? null : (
+      ) : pendingProjects.length === 0 ? (
+        <div className="flex flex-col items-center justify-center w-full py-16">
+          <svg className="w-16 h-16 text-gray-500 mb-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" strokeWidth="2" fill="none"/><path d="M10 9l5 3-5 3V9z" fill="currentColor"/></svg>
+          <p className="text-gray-400 text-lg font-semibold">No pending projects to upload!</p>
+        </div>
+      ) : (
         <div className="w-full flex flex-col gap-6">
           {pendingProjects.map(project => (
             <div key={project._id} className="flex flex-col md:flex-row items-center bg-gray-700 rounded-lg p-6 mb-2 shadow border border-gray-600">
@@ -157,6 +162,7 @@ export default function PendingUploadsTab() {
               <div className="flex-1 flex flex-col md:flex-row md:items-center md:justify-between w-full">
                 <div>
                   <div className="text-xl font-semibold text-white mb-2">{project.topic}</div>
+                  <div className="text-gray-400 text-sm mb-2">{new Date(project.timestamp).toLocaleString()}</div>
                   <div className="text-gray-300 mb-2">Status: <span className="text-yellow-400 font-bold">pending</span></div>
                   {project.driveLink && (
                     <a href={project.driveLink} target="_blank" rel="noopener noreferrer" className="text-red-400 underline text-sm">View Drive Link</a>
