@@ -9,6 +9,7 @@ const pendingProjectsRoutes = require('./routes/pendingProjects');
 const uploadVideoRoutes = require('./routes/uploadVideo');
 const proxyAvatarRoutes = require('./routes/proxyAvatar');
 const uploadedProjectsRoutes = require('./routes/uploadedProjects');
+const refineScriptRoutes = require('./routes/refineScript');
 const mongoose = require('mongoose');
 
 const app = express();
@@ -30,6 +31,7 @@ app.use('/api/pending-projects', pendingProjectsRoutes);
 app.use('/api/upload-video', uploadVideoRoutes);
 app.use('/api/proxy-avatar', proxyAvatarRoutes);
 app.use('/api/uploaded-projects', uploadedProjectsRoutes);
+app.use('/api/refine-script', refineScriptRoutes);
 
 const PORT = process.env.PORT || 5000;
 

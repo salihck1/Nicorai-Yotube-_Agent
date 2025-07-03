@@ -76,7 +76,7 @@ export default function UploadedVideosTab() {
               {/* Project Info */}
               <div className="flex-1 flex flex-col md:flex-row md:items-center md:justify-between w-full">
                 <div>
-                  <div className="text-xl font-semibold text-white mb-2">{project.topic}</div>
+                  {/* <div className="text-xl font-semibold text-white mb-2">{project.topic}</div> */}
                   <div className="text-grey-300 mb-2">{project.title}</div>
                   <div className="text-gray-400 text-sm mb-2">{new Date(project.timestamp).toLocaleString()}</div>
                   <div className="text-gray-300 mb-2">Status: <span className="text-green-400 font-bold">uploaded</span></div>

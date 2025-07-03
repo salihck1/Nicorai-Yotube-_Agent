@@ -349,20 +349,32 @@ export default function Home() {
       };
 
 
-      if (status === 'approved') {
+      let response;
+      if (status === 'refine') {
+        const refinePayload = {
+          script: editedScript,
+          feedback,
+          topic: formData.topic,
+          tone: formData.tone,
+          genre: formData.genre,
+          responseId,
+          timestamp: responseTimestamp,
+        };
+        console.log('Refine Script payload being sent to backend:', refinePayload);
+        response = await fetch('/api/refine-script', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(refinePayload),
+        });
+      } else {
         setIsGeneratingMedia(true);
+        response = await fetch('https://n8n.srv810314.hstgr.cloud/webhook/approve', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
       }
-
-
-      setLoadingProgress(10)
-      const response = await fetch('https://n8n.srv810314.hstgr.cloud/webhook/approve', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-     
       setLoadingProgress(30)
-     
       if (!response.ok) throw new Error(status === 'refine' ? 'Failed to refine script' : 'Failed to approve script');
      
       const data = await response.json();
@@ -918,6 +930,44 @@ export default function Home() {
                   URL.revokeObjectURL(url);
                 }}
                 handleApproveOrRefineScript={async () => {
+                  if (avatarFeedback.trim()) {
+                    // REFINEMENT LOGIC: Only send script and feedback for refinement
+                    setAvatarIsProcessing(true);
+                    const refinePayload = {
+                      script: avatarEditedScript,
+                      feedback: avatarFeedback,
+                      topic: avatarFormData.topic,
+                      tone: avatarFormData.tone,
+                      genre: avatarFormData.genre,
+                      responseId: null, // or appropriate value
+                      timestamp: new Date().toISOString(),
+                    };
+                    console.log('Refine Script payload being sent to backend:', refinePayload);
+                    try {
+                      const res = await fetch('http://localhost:5000/api/refine-script', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(refinePayload),
+                      });
+                      const data = await res.json();
+                      if (res.ok && (data.content?.text || data.text)) {
+                        const newScript = data.content?.text || data.text;
+                        setAvatarScript(newScript);
+                        setAvatarEditedScript(newScript);
+                        setAvatarFeedback('');
+                        setAvatarStatusMessage('Refined script updated!');
+                        setTimeout(() => setAvatarStatusMessage(''), 2000);
+                      } else {
+                        setAvatarStatusMessage('Failed to refine script.');
+                      }
+                    } catch (err) {
+                      setAvatarStatusMessage('Error refining script.');
+                    } finally {
+                      setAvatarIsProcessing(false);
+                    }
+                    return;
+                  }
+                  // APPROVAL LOGIC: Only run this if feedback is empty
                   setAvatarIsProcessing(true);
                   console.log('Approve Script clicked: starting avatar video generation');
                   // Send topic, avatarId, and script to backend proxy
@@ -971,7 +1021,7 @@ export default function Home() {
                 setVideoUrl={setAvatarVideoUrl}
                 setVideoApproval={setAvatarVideoApproval}
                 setMediaGenerated={() => {}}
-                approveDisabled={!selectedAvatar}
+                approveDisabled={!avatarFeedback.trim() && !selectedAvatar}
               />
               {/* Avatar selection section */}
               <div className="w-full max-w-4xl mt-8 flex flex-col items-center">
