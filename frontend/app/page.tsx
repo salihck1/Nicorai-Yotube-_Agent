@@ -69,6 +69,8 @@ export default function Home() {
   const [avatarVideoUrl, setAvatarVideoUrl] = useState<string | null>(null);
   const [avatarVideoApproval, setAvatarVideoApproval] = useState<'approved' | 'rejected' | null>(null);
   const [avatarApprovedVideoUrl, setAvatarApprovedVideoUrl] = useState<string | null>(null);
+  const [avatarVideoDetails, setAvatarVideoDetails] = useState(null);
+  const [bottomStatusMessage, setBottomStatusMessage] = useState('');
   const router = useRouter()
  
   const extractGoogleDriveFileId = (url: string) => {
@@ -771,9 +773,13 @@ export default function Home() {
       setAvatarStatusMessage('Script approved!');
       if (data && data.video && data.video.url) {
         setAvatarApprovedVideoUrl(data.video.url);
+        setAvatarVideoDetails(data);
+        setBottomStatusMessage('');
+        setTimeout(() => setAvatarStatusMessage(''), 3000);
       } else {
         setAvatarApprovedVideoUrl(null);
         setAvatarStatusMessage('Error occurred while generating avatar video.');
+        setBottomStatusMessage('');
       }
     } catch (err) {
       setAvatarScript('Failed to generate script.');
@@ -943,10 +949,14 @@ export default function Home() {
                     }
                     if (res.ok && data && data.video && data.video.url) {
                       setAvatarApprovedVideoUrl(data.video.url);
+                      setAvatarVideoDetails(data);
                       setAvatarStatusMessage('Script approved!');
+                      setBottomStatusMessage('');
+                      setTimeout(() => setAvatarStatusMessage(''), 3000);
                     } else {
                       setAvatarApprovedVideoUrl(null);
                       setAvatarStatusMessage('Error occurred while generating avatar video.');
+                      setBottomStatusMessage('');
                     }
                   } catch (err) {
                     console.error('Error during avatar video generation:', err);
@@ -986,10 +996,68 @@ export default function Home() {
                 <div className="w-full max-w-2xl mt-10 flex flex-col items-center">
                   <h3 className="text-xl font-bold text-white mb-4">Generated Avatar Video</h3>
                   <video src={avatarApprovedVideoUrl} controls className="w-full rounded-lg bg-black" />
+                  <div className="flex flex-row gap-4 mt-4">
+                    <button
+                      className="px-6 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition"
+                      onClick={async () => {
+                        try {
+                          const payload = {
+                            file: avatarVideoDetails?.file,
+                            video: avatarVideoDetails?.video,
+                            drive: avatarVideoDetails?.drivefolder,
+                            status: 'pending'
+                          };
+                          console.log('Saving avatar video details:', payload);
+                          const res = await fetch('http://localhost:5000/api/proxy-avatar/save', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload),
+                          });
+                          if (res.ok) {
+                            setBottomStatusMessage('Project saved to Pending Uploads');
+                          } else {
+                            setBottomStatusMessage('Failed to save Project.');
+                          }
+                        } catch (err) {
+                          setBottomStatusMessage('Error saving Project.');
+                        }
+                      }}
+                    >
+                      Save to pending
+                    </button>
+                    <button
+                      className="px-6 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
+                      onClick={async () => {
+                        try {
+                          const payload = {
+                            file: avatarVideoDetails?.file,
+                            video: avatarVideoDetails?.video,
+                            drive: avatarVideoDetails?.drivefolder,
+                            status: 'upload'
+                          };
+                          console.log('Saving avatar video details:', payload);
+                          const res = await fetch('http://localhost:5000/api/proxy-avatar/upload', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload),
+                          });
+                          if (res.ok) {
+                            setBottomStatusMessage('Video published');
+                          } else {
+                            setBottomStatusMessage('Failed to publish video.');
+                          }
+                        } catch (err) {
+                          setBottomStatusMessage('Error saving Project.');
+                        }
+                      }}
+                    >
+                      Upload to YouTube
+                    </button>
+                  </div>
                 </div>
               )}
-              {avatarStatusMessage && (
-                <div className="text-green-400 mt-4">{avatarStatusMessage}</div>
+              {bottomStatusMessage && (
+                <div className="text-green-400 mt-4">{bottomStatusMessage}</div>
               )}
             </div>
           ) : (

@@ -23,4 +23,46 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.post('/save', async (req, res) => {
+  try {
+    const { file, video, drive } = req.body;
+    const n8nRes = await fetch('https://n8n.srv810314.hstgr.cloud/webhook/avatar-video-save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ file, video, drive, status: 'pending' }),
+    });
+    const text = await n8nRes.text();
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      data = { raw: text };
+    }
+    res.status(n8nRes.status).json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message || 'Proxy error' });
+  }
+});
+
+router.post('/upload', async (req, res) => {
+  try {
+    const { file, video, drive } = req.body;
+    const n8nRes = await fetch('https://n8n.srv810314.hstgr.cloud/webhook/avatar-video-save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ file, video, drive, status: 'uploaded' }),
+    });
+    const text = await n8nRes.text();
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      data = { raw: text };
+    }
+    res.status(n8nRes.status).json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message || 'Proxy error' });
+  }
+});
+
 module.exports = router; 
