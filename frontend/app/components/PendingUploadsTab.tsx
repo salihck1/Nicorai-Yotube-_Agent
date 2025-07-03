@@ -3,14 +3,31 @@ import React, { useEffect, useState, useRef } from 'react';
 interface PendingProject {
   _id: string;
   topic: string;
-  timestamp: string;
-  content: string;
+  timestamp?: string;
+  content?: string;
   status: string;
   driveLink?: string;
 }
 
+interface ProxyAvatarUpload {
+  _id: string;
+  topic: string;
+  script?: string;
+  title?: string;
+  drive?: { url?: string };
+  file?: { url?: string };
+  video?: { url?: string };
+  avatarId?: string;
+  voiceId?: string;
+  status: string;
+  jobId?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export default function PendingUploadsTab() {
   const [pendingProjects, setPendingProjects] = useState<PendingProject[]>([]);
+  const [proxyAvatarUploads, setProxyAvatarUploads] = useState<ProxyAvatarUpload[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   // Store uploaded video URLs by project ID
@@ -28,7 +45,8 @@ export default function PendingUploadsTab() {
         return res.json();
       })
       .then(data => {
-        setPendingProjects(data);
+        setPendingProjects(data.scriptHistories || []);
+        setProxyAvatarUploads(data.proxyAvatarUploads || []);
         setLoading(false);
       })
       .catch(err => {
@@ -63,44 +81,24 @@ export default function PendingUploadsTab() {
     formData.append('video', file);
     formData.append('projectId', projectId);
 
-    // Log the form data keys and values
-    console.log('Uploading video for project:', projectId);
-    Array.from(formData.entries()).forEach(([key, value]) => {
-      if (value instanceof File) {
-        console.log(`FormData: ${key} = File(name=${value.name}, size=${value.size})`);
-      } else {
-        console.log(`FormData: ${key} = ${value}`);
-      }
-    });
-
     try {
-      console.log('Sending POST request to /api/upload-video...');
       const res = await fetch('http://localhost:5000/api/upload-video', {
         method: 'POST',
         body: formData,
       });
-      console.log('Response status:', res.status);
-
       if (!res.ok) {
         const errorText = await res.text();
-        console.error('Upload failed. Status:', res.status, 'Response:', errorText);
-        throw new Error('Upload failed');
+        throw new Error('Upload failed: ' + errorText);
       }
-
-      // Optionally show a success message
-      console.log('Upload successful for project:', projectId);
-
-      // Refresh the pending projects list
       setUploadedVideos(prev => { const copy = { ...prev }; delete copy[projectId]; return copy; });
       setUploadedVideoFiles(prev => { const copy = { ...prev }; delete copy[projectId]; return copy; });
       setUploading(prev => { const copy = { ...prev }; delete copy[projectId]; return copy; });
-
-      // Re-fetch projects
       setLoading(true);
       fetch('http://localhost:5000/api/pending-projects')
         .then(res => res.json())
         .then(data => {
-          setPendingProjects(data);
+          setPendingProjects(data.scriptHistories || []);
+          setProxyAvatarUploads(data.proxyAvatarUploads || []);
           setLoading(false);
         });
     } catch (err) {
@@ -117,13 +115,38 @@ export default function PendingUploadsTab() {
         <p className="text-gray-400">Loading...</p>
       ) : error ? (
         <p className="text-red-400">{error}</p>
-      ) : pendingProjects.length === 0 ? (
+      ) : (pendingProjects.length === 0 && proxyAvatarUploads.length === 0) ? (
         <div className="flex flex-col items-center justify-center w-full py-16">
           <svg className="w-16 h-16 text-gray-500 mb-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" strokeWidth="2" fill="none"/><path d="M10 9l5 3-5 3V9z" fill="currentColor"/></svg>
           <p className="text-gray-400 text-lg font-semibold">No pending projects to upload!</p>
         </div>
       ) : (
         <div className="w-full flex flex-col gap-6">
+          {/* Render ProxyAvatarUploads first */}
+          {proxyAvatarUploads.map(upload => (
+            <div key={upload._id} className="flex flex-col md:flex-row items-center bg-gray-700 rounded-lg p-6 mb-2 shadow border border-gray-600">
+              {/* Video Preview */}
+              <div className="flex flex-col items-center justify-center w-64 h-40 bg-gray-600 rounded-md mr-0 md:mr-8 mb-4 md:mb-0 relative">
+                {upload.video && upload.video.url ? (
+                  <video src={upload.video.url} controls className="w-full h-full rounded-md object-contain bg-black" />
+                ) : (
+                  <svg className="w-12 h-12 text-gray-400 mb-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" strokeWidth="2" fill="none"/><path d="M10 9l5 3-5 3V9z" fill="currentColor"/></svg>
+                )}
+              </div>
+              {/* Info */}
+              <div className="flex-1 flex flex-col md:flex-row md:items-center md:justify-between w-full">
+                <div>
+                  <div className="text-xl font-semibold text-white mb-2">{upload.title || upload.topic}</div>
+                  <div className="text-gray-400 text-sm mb-2">{upload.createdAt ? new Date(upload.createdAt).toLocaleString() : ''}</div>
+                  <div className="text-gray-300 mb-2">Status: <span className="text-yellow-400 font-bold">pending</span></div>
+                  {/* {upload.drive && upload.drive.url && (
+                    <a href={upload.drive.url} target="_blank" rel="noopener noreferrer" className="text-red-400 underline text-sm">View Drive Link</a>
+                  )} */}
+                </div>
+              </div>
+            </div>
+          ))}
+          {/* Render ScriptHistory pending projects */}
           {pendingProjects.map(project => (
             <div key={project._id} className="flex flex-col md:flex-row items-center bg-gray-700 rounded-lg p-6 mb-2 shadow border border-gray-600">
               {/* Video Upload/Preview */}
@@ -162,7 +185,7 @@ export default function PendingUploadsTab() {
               <div className="flex-1 flex flex-col md:flex-row md:items-center md:justify-between w-full">
                 <div>
                   <div className="text-xl font-semibold text-white mb-2">{project.topic}</div>
-                  <div className="text-gray-400 text-sm mb-2">{new Date(project.timestamp).toLocaleString()}</div>
+                  <div className="text-gray-400 text-sm mb-2">{project.timestamp ? new Date(project.timestamp).toLocaleString() : ''}</div>
                   <div className="text-gray-300 mb-2">Status: <span className="text-yellow-400 font-bold">pending</span></div>
                   {project.driveLink && (
                     <a href={project.driveLink} target="_blank" rel="noopener noreferrer" className="text-red-400 underline text-sm">View Drive Link</a>

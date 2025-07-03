@@ -3,12 +3,29 @@ import React, { useEffect, useState } from 'react';
 interface UploadedProject {
   _id: string;
   topic: string;
-  timestamp: string;
-  content: string;
+  timestamp?: string;
+  content?: string;
   status: string;
   driveLink?: string;
   youtubeLink?: string;
   title?: string;
+}
+
+interface ProxyAvatarUpload {
+  _id: string;
+  topic: string;
+  script?: string;
+  title?: string;
+  drive?: { url?: string };
+  file?: { url?: string };
+  video?: { url?: string };
+  avatarId?: string;
+  voiceId?: string;
+  status: string;
+  jobId?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  youtubelink?: string;
 }
 
 const getYouTubeEmbedUrl = (url: string) => {
@@ -20,6 +37,7 @@ const getYouTubeEmbedUrl = (url: string) => {
 
 export default function UploadedVideosTab() {
   const [uploadedProjects, setUploadedProjects] = useState<UploadedProject[]>([]);
+  const [proxyAvatarUploads, setProxyAvatarUploads] = useState<ProxyAvatarUpload[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -31,8 +49,8 @@ export default function UploadedVideosTab() {
         return res.json();
       })
       .then(data => {
-        console.log('Fetched uploaded projects:', data);
-        setUploadedProjects(data);
+        setUploadedProjects(data.scriptHistories || []);
+        setProxyAvatarUploads(data.proxyAvatarUploads || []);
         setLoading(false);
       })
       .catch(err => {
@@ -49,10 +67,56 @@ export default function UploadedVideosTab() {
         <p className="text-gray-400">Loading...</p>
       ) : error ? (
         <p className="text-red-400">{error}</p>
-      ) : uploadedProjects.length === 0 ? (
+      ) : (uploadedProjects.length === 0 && proxyAvatarUploads.length === 0) ? (
         <p className="text-gray-400">No uploaded videos.</p>
       ) : (
         <div className="w-full flex flex-col gap-6">
+
+
+          
+          {/* Render ProxyAvatarUploads first */}
+          {proxyAvatarUploads.map(upload => (
+            <div key={upload._id} className="flex flex-col md:flex-row items-center bg-gray-700 rounded-lg p-6 mb-2 shadow border border-gray-600">
+              {/* Video Preview (YouTube, Drive, or direct video) */}
+              <div className="flex flex-col items-center justify-center w-64 h-40 bg-gray-600 rounded-md mr-0 md:mr-8 mb-4 md:mb-0 relative">
+                {upload.youtubelink ? (
+                  <iframe
+                    src={getYouTubeEmbedUrl(upload.youtubelink)}
+                    title="YouTube video preview"
+                    className="w-full h-full rounded-md bg-black"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                ) : upload.drive && upload.drive.url ? (
+                  <a href={upload.drive.url} target="_blank" rel="noopener noreferrer" className="w-full h-full flex items-center justify-center text-white underline">
+                    View Drive Video
+                  </a>
+                ) : upload.video && upload.video.url ? (
+                  <video src={upload.video.url} controls className="w-full h-full rounded-md object-contain bg-black" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-gray-400">No video preview</div>
+                )}
+              </div>
+              {/* Project Info */}
+              <div className="flex-1 flex flex-col md:flex-row md:items-center md:justify-between w-full">
+                <div>
+                  <div className="text-xl font-semibold text-white mb-2">{upload.title || upload.topic}</div>
+                  <div className="text-gray-400 text-sm mb-2">{upload.createdAt ? new Date(upload.createdAt).toLocaleString() : ''}</div>
+                  <div className="text-gray-300 mb-2">Status: <span className="text-green-400 font-bold">uploaded</span></div>
+                  {upload.youtubelink && (
+                    <a href={upload.youtubelink} target="_blank" rel="noopener noreferrer" className="text-blue-400 underline text-sm">View YouTube Video</a>
+                  )}
+                  {upload.drive && upload.drive.url && (
+                    <a href={upload.drive.url} target="_blank" rel="noopener noreferrer" className="text-red-400 underline text-sm ml-4">View Drive Link</a>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+
+
+
+          {/* Render ScriptHistory uploaded projects */}
           {uploadedProjects.map(project => (
             <div key={project._id} className="flex flex-col md:flex-row items-center bg-gray-700 rounded-lg p-6 mb-2 shadow border border-gray-600">
               {/* Video Preview (YouTube or Drive) */}
@@ -76,13 +140,9 @@ export default function UploadedVideosTab() {
               {/* Project Info */}
               <div className="flex-1 flex flex-col md:flex-row md:items-center md:justify-between w-full">
                 <div>
-                  {/* <div className="text-xl font-semibold text-white mb-2">{project.topic}</div> */}
                   <div className="text-grey-300 mb-2">{project.title}</div>
-                  <div className="text-gray-400 text-sm mb-2">{new Date(project.timestamp).toLocaleString()}</div>
+                  <div className="text-gray-400 text-sm mb-2">{project.timestamp ? new Date(project.timestamp).toLocaleString() : ''}</div>
                   <div className="text-gray-300 mb-2">Status: <span className="text-green-400 font-bold">uploaded</span></div>
-                  {/* {project.driveLink && (
-                    <a href={project.driveLink} target="_blank" rel="noopener noreferrer" className="text-red-400 underline text-sm mr-4">View Drive Link</a>
-                  )} */}
                   {project.youtubeLink && (
                     <a href={project.youtubeLink} target="_blank" rel="noopener noreferrer" className="text-blue-400 underline text-sm">View YouTube Video</a>
                   )}
