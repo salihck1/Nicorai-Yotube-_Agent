@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation'
 import Drawer from './components/Drawer'
 import PendingUploadsTab from './components/PendingUploadsTab'
 import UploadedVideosTab from './components/UploadedVideosTab'
+import { v4 as uuidv4 } from 'uuid'
 
 
 interface FormData {
@@ -71,6 +72,7 @@ export default function Home() {
   const [avatarApprovedVideoUrl, setAvatarApprovedVideoUrl] = useState<string | null>(null);
   const [avatarVideoDetails, setAvatarVideoDetails] = useState(null);
   const [bottomStatusMessage, setBottomStatusMessage] = useState('');
+  const [proxyAvatarJobId, setProxyAvatarJobId] = useState<string | null>(null);
   const router = useRouter()
  
   const extractGoogleDriveFileId = (url: string) => {
@@ -793,6 +795,10 @@ export default function Home() {
         setAvatarStatusMessage('Error occurred while generating avatar video.');
         setBottomStatusMessage('');
       }
+      if (!proxyAvatarJobId) {
+        const newId = uuidv4();
+        setProxyAvatarJobId(newId);
+      }
     } catch (err) {
       setAvatarScript('Failed to generate script.');
       setAvatarEditedScript('Failed to generate script.');
@@ -1055,7 +1061,13 @@ export default function Home() {
                             file: avatarVideoDetails?.file,
                             video: avatarVideoDetails?.video,
                             drive: avatarVideoDetails?.drivefolder,
-                            status: 'pending'
+                            status: 'pending',
+                            topic: avatarFormData.topic,
+                            script: avatarScript,
+                            title: avatarVideoDetails?.title,
+                            avatarId: selectedAvatarId,
+                            voiceId: selectedVoiceId,
+                            jobId: proxyAvatarJobId
                           };
                           console.log('Saving avatar video details:', payload);
                           const res = await fetch('http://localhost:5000/api/proxy-avatar/save', {
@@ -1083,7 +1095,13 @@ export default function Home() {
                             file: avatarVideoDetails?.file,
                             video: avatarVideoDetails?.video,
                             drive: avatarVideoDetails?.drivefolder,
-                            status: 'upload'
+                            status: 'upload',
+                            topic: avatarFormData.topic,
+                            script: avatarScript,
+                            title: avatarVideoDetails?.title,
+                            avatarId: selectedAvatarId,
+                            voiceId: selectedVoiceId,
+                            jobId: proxyAvatarJobId
                           };
                           console.log('Saving avatar video details:', payload);
                           const res = await fetch('http://localhost:5000/api/proxy-avatar/upload', {
@@ -1091,6 +1109,9 @@ export default function Home() {
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify(payload),
                           });
+                          const data = await res.json();
+                          console.log('Response from /api/proxy-avatar/upload:', data);
+                          // Optionally, you could send a follow-up request to save youtubelink/title if needed
                           if (res.ok) {
                             setBottomStatusMessage('Video published');
                           } else {
