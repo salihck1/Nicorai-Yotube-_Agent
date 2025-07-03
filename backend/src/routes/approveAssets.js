@@ -67,7 +67,7 @@ router.post('/', async (req, res) => {
         title: responseData.title || null
       });
     } catch (dbErr) {
-      console.error('Failed to save ScriptHistorys:', dbErr);
+      console.error('Failed to save ScriptHistory:', dbErr);
       // Do not block the response to client, but log the error
     }
 
