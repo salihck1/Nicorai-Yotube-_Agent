@@ -10,6 +10,7 @@ import Drawer from './components/Drawer'
 import PendingUploadsTab from './components/PendingUploadsTab'
 import UploadedVideosTab from './components/UploadedVideosTab'
 import { v4 as uuidv4 } from 'uuid'
+import NewsBanner from './components/NewsBanner'
 
 
 interface FormData {
@@ -363,7 +364,7 @@ export default function Home() {
           timestamp: responseTimestamp,
         };
         console.log('Refine Script payload being sent to backend:', refinePayload);
-        response = await fetch('/api/refine-script', {
+        response = await fetch('http://localhost:5000/api/refine-script', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(refinePayload),
@@ -1132,13 +1133,16 @@ export default function Home() {
               )}
             </div>
           ) : (
-            <TopicSection
-              formData={avatarFormData}
-              setFormData={setAvatarFormData}
-              handleSubmit={handleAvatarSubmit}
-              isLoading={avatarIsProcessing}
-              title="Create Avatar Video"
-            />
+            <div className="flex flex-col items-center w-full">
+              <TopicSection
+                formData={avatarFormData}
+                setFormData={setAvatarFormData}
+                handleSubmit={handleAvatarSubmit}
+                isLoading={avatarIsProcessing}
+                title="Create Avatar Video"
+              />
+              {/* <NewsBanner /> */}
+            </div>
           )
         }
         pendingUploads={<PendingUploadsTab />}
