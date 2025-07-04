@@ -813,26 +813,27 @@ export default function Home() {
   const avatarImages = [
     'https://files2.heygen.ai/avatar/v3/0233ba6aea01411ab07ddafbf97886f2_39260/preview_talk_2.webp',
     'https://files2.heygen.ai/avatar/v3/167f0f21269445be8eb3964aee62bbad_38050/preview_target.webp',
-    'https://files2.heygen.ai/talking_photo/1512b3ac56b04ec19b84d641da9eee4e/6e0198bd7feb405fb35fe4e8921c8fd4.webp?Expires=1751748880&Signature=QYfLhK5u~J9uQoLDHQmWbfpGRZA7DTvj0-QkIWEDhk4AW8pgqieeFEU0PmkJHEYHGifUEVeg1pi0Tu7FROE4qwAGlx4zmiVJX4G38-si7sBL7Ie3VdsRrvJBmPnEzdWu5yiK0z7tI4jnTmkWL7eSlw5OtE1EmXcBNjS6xLENOGHcgjNgs-nPtLPgJiQtWY-pXeqdSjIkTiP18LAYP99t~57ZyVeiyBT0b4YkHzJX-Oey5KWbaPbW6jEuQA3DQx2skkOgRabAcdPbUAc7zw~Xap5hTZDVQdCEsqZ-Z0W43y~PRaZernw4W-Ky0dam1FppfnUNeG9kPjSINcBtvf6NWw__&Key-Pair-Id=K38HBHX5LX3X2H',
-    'https://files2.heygen.ai/talking_photo/4ca09224d71148679a355aabd2863297/ecfc1d76b069474dbef892a0b0e15c58.WEBP?Expires=1751567871&Signature=U~HU~uMHMznJ2tF20XJHm3cMu~ryOm8nuL0P0vEcxAiKVNPsZ~L3c1Jtl4DyOdMKUk813myCox9glCXD1zpi9uBaGb5KXjx0IblUwfodLcTVu1MJl7lFeVyO8sQD0l4t4UDQyMYPNPfN2FYZiiD0sAiV8OZzRFxGo2T7CzOgkjiN9n6QKyg3jcgQpwScLHqgrEJNcFJy-Db~fnkVGZR4RtVCnfFNmm2XAAdNOKHAKxAfb9PqBEBp7yozi0WL1U0t~mRz9I~jpv-dXV-ieptpq7ksHF74oKL3i49dpGFyG51L2A5i8lf9VuxG-8bchtOg8lQskqnwvZ7AkS1sCL~e9A__&Key-Pair-Id=K38HBHX5LX3X2H',
+    'https://files2.heygen.ai/avatar/v3/732ab382194149198f3c29d85988890e_37740/preview_talk_4.webp',
+    'https://files2.heygen.ai/avatar/v3/11af9745b4fb470bad72bf5496a12007_39550/preview_target.webp'
+ 
   ];
   const avatarNames = [
     'Amelia',
     'Leos',
-    'Tom',
-    'Violet',
+    'milena',
+    'Gerado',
   ];
   const avatarIds = [
     'Amelia_sitting_business_training_front',
     'Leos_sitting_office_front',
-    'f41cc08abdcf4741b7949dfb3d1527f5',
-    '0c72b426556c48a8982c22298c117610',
+    'Milena_sitting_office_front',
+    'Gerardo_standing_nightscene_front',
   ];
   const voiceIds = [
     'dc44cce2502749a389d12b9baf4a0e5f',
     'e0beae5b24a843b7a9ea021c1db975dd',
-    '8445e1a518c74304bcaa5b793d1b2f54',
-    'ec971490059245d3953fd895ee37ab09',
+    'e235f6f5b29748959ca6d319c261bd47',
+    '6e032ca64a1745a0b48036e64042b2fb',
   ];
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
   const [selectedAvatarId, setSelectedAvatarId] = useState<string | null>(null);
