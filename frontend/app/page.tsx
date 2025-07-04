@@ -5,7 +5,7 @@ import { useState, useRef, useEffect } from 'react'
 import TopicSection from './components/topic_section'
 import ScriptSection from './components/script_section'
 import AssetSection from './components/asset_section'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Drawer from './components/Drawer'
 import PendingUploadsTab from './components/PendingUploadsTab'
 import UploadedVideosTab from './components/UploadedVideosTab'
@@ -75,6 +75,11 @@ export default function Home() {
   const [bottomStatusMessage, setBottomStatusMessage] = useState('');
   const [proxyAvatarJobId, setProxyAvatarJobId] = useState<string | null>(null);
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const defaultTab = searchParams.get('tab') as 'new' | 'pending' | 'uploaded' | 'avatar' || 'new';
+  const [activeTab, setActiveTab] = useState(defaultTab);
+  const highlightId = searchParams.get('highlight');
+
  
   const extractGoogleDriveFileId = (url: string) => {
     if (!url) return null;
@@ -871,6 +876,7 @@ export default function Home() {
   return (
     <main className="min-h-[calc(100vh-64px)] flex flex-col items-center justify-center p-4 pt-20">
       <Drawer
+      defaultTab={defaultTab}
         newProject={
           mediaGenerated ? (
             <AssetSection
@@ -1122,6 +1128,8 @@ export default function Home() {
                           });
                           if (res.ok) {
                             setBottomStatusMessage('Project saved to Pending Uploads');
+                            // Use window.location for a full page reload and redirect
+                            window.location.href = '/?tab=pending';
                           } else {
                             setBottomStatusMessage('Failed to save Project.');
                           }
@@ -1159,6 +1167,8 @@ export default function Home() {
                           // Optionally, you could send a follow-up request to save youtubelink/title if needed
                           if (res.ok) {
                             setBottomStatusMessage('Video published');
+
+                            window.location.href = '/?tab=uploaded';
                           } else {
                             setBottomStatusMessage('Failed to publish video.');
                           }

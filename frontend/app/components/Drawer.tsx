@@ -1,22 +1,35 @@
-import React, { useState, ReactNode } from 'react';
+import React, { useState, ReactNode, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 interface DrawerProps {
   newProject: ReactNode;
   pendingUploads: ReactNode;
   uploadedVideos: ReactNode;
   createAvatarVideo?: ReactNode;
+  defaultTab?: 'new' | 'pending' | 'uploaded' | 'avatar';
 }
 
 const tabList = [
-  { key: 'new', label: 'Create Podcast' },
+  { key: 'new', label: 'Create Podacast' },
   { key: 'avatar', label: 'Create Avatar Video' },
   { key: 'pending', label: 'Pending Uploads' },
   { key: 'uploaded', label: 'Uploaded Videos' },
 ];
 
-export default function Drawer({ newProject, pendingUploads, uploadedVideos, createAvatarVideo }: DrawerProps) {
-  const [selectedTab, setSelectedTab] = useState<'new' | 'pending' | 'uploaded' | 'avatar'>('new');
+export default function Drawer({ newProject, pendingUploads, uploadedVideos, createAvatarVideo, defaultTab }: DrawerProps) {
+  const [selectedTab, setSelectedTab] = useState<'new' | 'pending' | 'uploaded' | 'avatar'>(defaultTab || 'new');
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  // Read the tab from URL parameters
+  const searchParams = useSearchParams();
+
+  // Update the selected tab when the URL parameter changes
+  useEffect(() => {
+    const tabParam = searchParams.get('tab') as 'new' | 'pending' | 'uploaded' | 'avatar';
+    if (tabParam && ['new', 'pending', 'uploaded', 'avatar'].includes(tabParam)) {
+      setSelectedTab(tabParam);
+    }
+  }, [searchParams]);
 
   // Drawer content for reuse
   const drawerContent = (
