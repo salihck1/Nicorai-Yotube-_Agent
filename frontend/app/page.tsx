@@ -846,6 +846,27 @@ export default function Home() {
   }, [avatarScript]); // or use avatarFormData.topic if that's the trigger for new script
 
 
+  // Hide body scrollbar during loading overlay
+  useEffect(() => {
+    if (isLoading || isProcessing) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isLoading, isProcessing]);
+
+
+  // Always restore body overflow on unmount
+  useEffect(() => {
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, []);
+
+
   return (
     <main className="min-h-[calc(100vh-64px)] flex flex-col items-center justify-center p-4 pt-20">
       <Drawer
@@ -871,12 +892,36 @@ export default function Home() {
               setLocalThumbnails={setLocalThumbnails}
             />
           ) : !hasScript ? (
-            <TopicSection
-              formData={formData}
-              setFormData={setFormData}
-              handleSubmit={handleSubmit}
-              isLoading={isLoading}
-            />
+            (isLoading || isProcessing) ? (
+              <div className="fixed inset-0 z-50 bg-black min-h-screen w-screen h-screen overflow-hidden flex items-center justify-center backdrop-blur-sm">
+                <div className="flex flex-col items-center w-full max-w-xs sm:max-w-md md:max-w-lg mx-auto px-2 sm:px-4">
+                  <svg className="animate-spin h-14 w-14 text-red-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                  </svg>
+                  <h2 className="text-2xl font-bold text-white mb-2 text-center">Generating your script...</h2>
+                  <div className="w-full bg-gray-700 rounded-full h-2.5 mb-6 overflow-hidden">
+                    <div className="bg-red-500 h-2.5 rounded-full transition-all duration-300" style={{ width: `${loadingProgress || 30}%` }}></div>
+                  </div>
+                  <div className="w-full flex flex-col items-center mb-2 mt-8">
+                    <h3 className="text-lg font-bold text-red-400 mb-1 text-center">Latest Tech News</h3>
+                    <p className="text-gray-300 text-xs text-center">We're generating your script. Here's some tech news to keep you updated!</p>
+                  </div>
+                  <div className="bg-gray-900 rounded-xl shadow-lg p-4 w-full max-w-full max-h-[60vh] overflow-y-auto flex flex-col items-center">
+                    <div className="w-full">
+                      <NewsBanner />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <TopicSection
+                formData={formData}
+                setFormData={setFormData}
+                handleSubmit={handleSubmit}
+                isLoading={isLoading}
+              />
+            )
           ) : (
             <ScriptSection
               formData={formData}
@@ -1141,7 +1186,6 @@ export default function Home() {
                 isLoading={avatarIsProcessing}
                 title="Create Avatar Video"
               />
-              {/* <NewsBanner /> */}
             </div>
           )
         }

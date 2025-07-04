@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
+import NewsBanner from './NewsBanner';
+
 
 interface FormData {
   topic: string
@@ -59,13 +61,25 @@ export default function ScriptSection({
   
   if (isGeneratingMedia) {
     return (
-      <div className="flex flex-col items-center justify-center h-[500px] w-full max-w-2xl bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-700 text-white">
-        <h2 className="text-2xl font-bold mb-6">Creating Your Media</h2>
-        <p className="text-gray-400 mb-8">Analyzing your Script...</p>
-        <div className="w-full bg-gray-700 rounded-full h-2.5 mb-4">
+      <div className="flex flex-col items-center justify-center h-[500px] w-full max-w-2xl">
+        <svg className="animate-spin h-14 w-14 text-red-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+        </svg>
+        <h2 className="text-2xl font-bold text-white mb-2 text-center">Generating your script...</h2>
+        <div className="w-full bg-gray-700 rounded-full h-2.5 mb-6 overflow-hidden">
           <div className="bg-red-500 h-2.5 rounded-full transition-all duration-300" style={{ width: `${loadingProgress}%` }}></div>
         </div>
-        <p className="text-gray-400 text-sm">{Math.round(loadingProgress)}% complete</p>
+        {/* News Heading and Hint */}
+        <div className="w-full flex flex-col items-center mb-2 mt-8">
+          <h3 className="text-lg font-bold text-red-400 mb-1 text-center">Latest Tech News</h3>
+          <p className="text-gray-300 text-xs text-center">We're generating your script. Here's some tech news to keep you updated!</p>
+        </div>
+        <div className="bg-gray-900 rounded-xl shadow-lg p-4 w-full max-w-full max-h-[200px] overflow-y-auto flex flex-col items-center">
+          <div className="w-full">
+            <NewsBanner />
+          </div>
+        </div>
       </div>
     );
   }
