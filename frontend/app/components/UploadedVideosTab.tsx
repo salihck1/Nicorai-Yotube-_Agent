@@ -100,9 +100,18 @@ export default function UploadedVideosTab() {
               {/* Project Info */}
               <div className="flex-1 flex flex-col md:flex-row md:items-center md:justify-between w-full">
                 <div>
-                  <div className="text-xl font-semibold text-white mb-2">{upload.title || upload.topic}</div>
+                  <div className="text-xl font-semibold text-white mb-1">
+                    {upload.title || upload.topic}
+                  </div>
+                  {upload.avatarId && (
+                    <div className="mb-2">
+                      <span className="inline-block text-grey-600 text-xs rounded py-0.5 shadow-sm">
+                        🧑‍💻 AI-Avatar Project
+                      </span>
+                    </div>
+                  )}
                   <div className="text-gray-400 text-sm mb-2">{upload.createdAt ? new Date(upload.createdAt).toLocaleString() : ''}</div>
-                  <div className="text-gray-300 mb-2">Status: <span className="text-green-400 font-bold">uploaded</span></div>
+                  <div className="text-gray-300 mb-2">Status: <span className="text-grey-300">Uploaded</span></div>
                   {upload.youtubelink && (
                     <a href={upload.youtubelink} target="_blank" rel="noopener noreferrer" className="text-blue-400 underline text-sm">View YouTube Video</a>
                   )}

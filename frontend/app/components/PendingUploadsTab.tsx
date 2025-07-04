@@ -233,7 +233,7 @@ export default function PendingUploadsTab() {
                 <div>
                   <div className="text-xl font-semibold text-white mb-2">{upload.title || upload.topic}</div>
                   <div className="text-gray-400 text-sm mb-2">{upload.createdAt ? new Date(upload.createdAt).toLocaleString() : ''}</div>
-                  <div className="text-gray-300 mb-2">Status: <span className="text-yellow-400 font-bold">pending</span></div>
+                  <div className="text-gray-300 mb-2">Status: <span className="text-frey-300">Pending</span></div>
                   {upload.drive && upload.drive.url && (
                     <a href={upload.drive.url} target="_blank" rel="noopener noreferrer" className="text-red-400 underline text-sm">View Drive Link</a>
                   )}
