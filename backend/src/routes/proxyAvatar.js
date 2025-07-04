@@ -70,7 +70,7 @@ router.post('/upload', async (req, res) => {
     } catch {
       data = {};
     }
-    const { youtubelink, title: n8nTitle } = data;
+    const { youtubelink, title: n8nTitle, embedding } = data;
     await ProxyAvatarUpload.findOneAndUpdate(
       { jobId },
       {
@@ -78,6 +78,7 @@ router.post('/upload', async (req, res) => {
           topic,
           script,
           title: n8nTitle || title,
+          embedding,
           drive,
           file,
           video,
@@ -89,7 +90,7 @@ router.post('/upload', async (req, res) => {
       },
       { upsert: true, new: true }
     );
-    res.status(200).json({ youtubelink, status: 'uploaded', title: n8nTitle, jobId });
+    res.status(200).json({ youtubelink, status: 'uploaded', title: n8nTitle, jobId, embedding });
   } catch (err) {
     res.status(500).json({ error: err.message || 'Proxy error' });
   }

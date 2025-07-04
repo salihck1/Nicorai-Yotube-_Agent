@@ -4,6 +4,7 @@ const proxyAvatarUploadSchema = new mongoose.Schema({
   topic: { type: String, required: true },
   script: { type: String },
   title: { type: String },
+  embedding: { type: String },
   drive: {
     url: { type: String }
   },
