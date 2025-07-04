@@ -288,7 +288,7 @@ export default function PendingUploadsTab() {
                 <div>
                   <div className="text-xl font-semibold text-white mb-2">{project.topic}</div>
                   <div className="text-gray-400 text-sm mb-2">{project.timestamp ? new Date(project.timestamp).toLocaleString() : ''}</div>
-                  <div className="text-gray-300 mb-2">Status: <span className="text-yellow-400 font-bold">pending</span></div>
+                  <div className="text-gray-300 mb-2">Status: <span className="text-grey-300">Pending</span></div>
                   {project.driveLink && (
                     <a href={project.driveLink} target="_blank" rel="noopener noreferrer" className="text-red-400 underline text-sm">View Drive Link</a>
                   )}

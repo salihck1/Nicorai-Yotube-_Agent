@@ -151,7 +151,7 @@ export default function UploadedVideosTab() {
                 <div>
                   <div className="text-grey-300 mb-2">{project.title}</div>
                   <div className="text-gray-400 text-sm mb-2">{project.timestamp ? new Date(project.timestamp).toLocaleString() : ''}</div>
-                  <div className="text-gray-300 mb-2">Status: <span className="text-green-400 font-bold">uploaded</span></div>
+                  <div className="text-gray-300 mb-2">Status: <span className="text-grey-300">Uploaded</span></div>
                   {project.youtubeLink && (
                     <a href={project.youtubeLink} target="_blank" rel="noopener noreferrer" className="text-blue-400 underline text-sm">View YouTube Video</a>
                   )}
