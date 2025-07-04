@@ -74,7 +74,7 @@ export default function ScriptSection({
           <h3 className="text-lg font-bold text-red-400 mb-1 text-center">Latest Tech News</h3>
           <p className="text-gray-300 text-xs text-center">We're generating your script. Here's some tech news to keep you updated!</p>
         </div>
-        <div className="bg-gray-900 rounded-xl shadow-lg p-4 w-full max-w-full max-h-[200px] overflow-y-auto flex flex-col items-center">
+        <div className="bg-gray-900 rounded-xl shadow-lg p-4 w-full max-w-full max-h-[350px] overflow-y-auto flex flex-col items-center">
           <div className="w-full">
             <NewsBanner />
           </div>
