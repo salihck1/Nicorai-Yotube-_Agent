@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const ScriptHistory = require('../models/ScriptHistory');
+const ProxyAvatarUpload = require('../models/ProxyAvatarUpload');
 const { google } = require('googleapis');
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
@@ -21,13 +22,23 @@ router.post('/', upload.single('video'), async (req, res) => {
     if (!projectId || !file) {
       return res.status(400).json({ error: 'Missing projectId or video file' });
     }
-    // Find project
-    const project = await ScriptHistory.findById(projectId);
+    // Try ScriptHistory first
+    let project = await ScriptHistory.findById(projectId);
+    let isProxyAvatar = false;
+    let driveLink = null;
     if (!project) {
-      return res.status(404).json({ error: 'Project not found' });
+      // Try ProxyAvatarUpload
+      project = await ProxyAvatarUpload.findById(projectId);
+      isProxyAvatar = true;
+      if (!project) {
+        return res.status(404).json({ error: 'Project not found' });
+      }
+      driveLink = project.drive && project.drive.url;
+    } else {
+      driveLink = project.driveLink;
     }
-    // Extract Google Drive folder ID from driveLink
-    const match = project.driveLink && project.driveLink.match(/folders\/([a-zA-Z0-9_-]+)/);
+    // Extract Google Drive folder ID
+    const match = driveLink && driveLink.match(/folders\/([a-zA-Z0-9_-]+)/);
     const folderId = match ? match[1] : null;
     if (!folderId) {
       return res.status(400).json({ error: 'Invalid or missing Google Drive folder link' });
@@ -56,7 +67,7 @@ router.post('/', upload.single('video'), async (req, res) => {
     const n8nPayload = {
       projectId,
       videoLink,
-      driveLink: project.driveLink,
+      driveLink: driveLink,
     };
     const n8nRes = await fetch('https://n8n.srv810314.hstgr.cloud/webhook/youtube', {
       method: 'POST',
@@ -73,10 +84,18 @@ router.post('/', upload.single('video'), async (req, res) => {
       return res.status(502).json({ error: 'No YouTube link returned from n8n', details: n8nData });
     }
     // Update project in MongoDB
-    project.status = 'uploaded';
-    project.youtubeLink = youtubeLink;
-    project.title = title;
-    await project.save();
+    if (isProxyAvatar) {
+      project.status = 'uploaded';
+      project.youtubelink = youtubeLink;
+      project.title = title;
+      project.video = { url: videoLink };
+      await project.save();
+    } else {
+      project.status = 'uploaded';
+      project.youtubeLink = youtubeLink;
+      project.title = title;
+      await project.save();
+    }
     return res.json({ success: true, youtubeLink, title });
   } catch (error) {
     console.error(error);
