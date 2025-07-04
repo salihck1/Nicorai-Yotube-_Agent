@@ -61,16 +61,15 @@ export default function ScriptSection({
   
   if (isGeneratingMedia) {
     return (
-      <div className="flex flex-col items-center justify-center h-[500px] w-full max-w-2xl">
+      <div className="flex flex-col items-center justify-center w-full max-w-2xl mx-auto p-8 bg-gray-800 rounded-xl shadow-lg border border-gray-700">
         <svg className="animate-spin h-14 w-14 text-red-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
         </svg>
-        <h2 className="text-2xl font-bold text-white mb-2 text-center">Generating your script...</h2>
+        <h2 className="text-2xl font-bold text-white mb-2 text-center">Generating your assets...</h2>
         <div className="w-full bg-gray-700 rounded-full h-2.5 mb-6 overflow-hidden">
           <div className="bg-red-500 h-2.5 rounded-full transition-all duration-300" style={{ width: `${loadingProgress}%` }}></div>
         </div>
-        {/* News Heading and Hint */}
         <div className="w-full flex flex-col items-center mb-2 mt-8">
           <h3 className="text-lg font-bold text-red-400 mb-1 text-center">Latest Tech News</h3>
           <p className="text-gray-300 text-xs text-center">We're generating your script. Here's some tech news to keep you updated!</p>
