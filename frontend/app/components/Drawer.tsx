@@ -8,7 +8,7 @@ interface DrawerProps {
 }
 
 const tabList = [
-  { key: 'new', label: 'New Project' },
+  { key: 'new', label: 'Create Podcast' },
   { key: 'avatar', label: 'Create Avatar Video' },
   { key: 'pending', label: 'Pending Uploads' },
   { key: 'uploaded', label: 'Uploaded Videos' },
