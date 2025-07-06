@@ -18,7 +18,8 @@ const scriptHistorySchema = new mongoose.Schema({
   driveLink: String,
   youtubeLink: String,
   feedback: String,
-  title: String
+  title: String,
+  embedding: String
 });
 
 module.exports = mongoose.model('ScriptHistory', scriptHistorySchema); 

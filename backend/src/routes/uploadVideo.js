@@ -94,6 +94,7 @@ router.post('/', upload.single('video'), async (req, res) => {
       project.status = 'uploaded';
       project.youtubeLink = youtubeLink;
       project.title = title;
+      project.embedding = n8nData.embedding;
       await project.save();
     }
     return res.json({ success: true, youtubeLink, title });

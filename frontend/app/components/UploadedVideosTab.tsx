@@ -9,6 +9,7 @@ interface UploadedProject {
   driveLink?: string;
   youtubeLink?: string;
   title?: string;
+  embedding?: string;
 }
 
 interface ProxyAvatarUpload {
@@ -142,9 +143,17 @@ export default function UploadedVideosTab() {
           {/* Render ScriptHistory uploaded projects */}
           {uploadedProjects.map(project => (
             <div key={project._id} className="flex flex-col md:flex-row items-center bg-gray-700 rounded-lg p-6 mb-2 shadow border border-gray-600">
-              {/* Video Preview (YouTube or Drive) */}
+              {/* Video Preview (Embedding, YouTube, or Drive) */}
               <div className="flex flex-col items-center justify-center w-64 h-40 bg-gray-600 rounded-md mr-0 md:mr-8 mb-4 md:mb-0 relative">
-                {project.youtubeLink ? (
+                {project.embedding ? (
+                  <iframe
+                    src={getEmbedSrc(project.embedding)}
+                    title="YouTube video preview"
+                    className="w-full h-full rounded-md bg-black"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                ) : project.youtubeLink ? (
                   <iframe
                     src={getYouTubeEmbedUrl(project.youtubeLink)}
                     title="YouTube video preview"
