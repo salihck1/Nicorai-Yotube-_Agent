@@ -4,7 +4,7 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: '/:path*',
+        source: '/webhook/:path*',
         headers: [
           {
             key: 'Content-Security-Policy',

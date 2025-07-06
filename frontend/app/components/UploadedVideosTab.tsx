@@ -26,6 +26,7 @@ interface ProxyAvatarUpload {
   createdAt?: string;
   updatedAt?: string;
   youtubelink?: string;
+  embedding?: string;
 }
 
 const getYouTubeEmbedUrl = (url: string) => {
@@ -34,6 +35,19 @@ const getYouTubeEmbedUrl = (url: string) => {
   const match = url.match(/(?:youtu\.be\/|youtube\.com\/watch\?v=)([\w-]+)/);
   return match ? `https://www.youtube.com/embed/${match[1]}` : '';
 };
+
+// Helper to extract src from iframe HTML or return direct URL
+function getEmbedSrc(embedding?: string) {
+  if (!embedding) return undefined;
+  const match = embedding.match(/src=["']([^"']+)["']/);
+  let src = match ? match[1] : embedding;
+  // If src starts with //, prepend https:
+  if (src.startsWith('//')) {
+    src = 'https:' + src;
+  }
+  console.log('Embedding src:', src); // Debug output
+  return src;
+}
 
 export default function UploadedVideosTab() {
   const [uploadedProjects, setUploadedProjects] = useState<UploadedProject[]>([]);
@@ -77,12 +91,12 @@ export default function UploadedVideosTab() {
           {/* Render ProxyAvatarUploads first */}
           {proxyAvatarUploads.map(upload => (
             <div key={upload._id} className="flex flex-col md:flex-row items-center bg-gray-700 rounded-lg p-6 mb-2 shadow border border-gray-600">
-              {/* Video Preview (YouTube, Drive, or direct video) */}
+              {/* Video Preview (Embedding, Drive, or direct video) */}
               <div className="flex flex-col items-center justify-center w-64 h-40 bg-gray-600 rounded-md mr-0 md:mr-8 mb-4 md:mb-0 relative">
-                {upload.youtubelink ? (
+                {upload.embedding ? (
                   <iframe
-                    src={getYouTubeEmbedUrl(upload.youtubelink)}
-                    title="YouTube video preview"
+                    src={getEmbedSrc(upload.embedding)}
+                    title="AI Avatar video preview"
                     className="w-full h-full rounded-md bg-black"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
