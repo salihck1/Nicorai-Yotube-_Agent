@@ -171,7 +171,7 @@ export default function PendingUploadsTab() {
         <p className="text-red-400">{error}</p>
       ) : (pendingProjects.length === 0 && proxyAvatarUploads.length === 0) ? (
         <div className="flex flex-col items-center justify-center w-full py-16">
-          <svg className="w-16 h-16 text-gray-500 mb-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" strokeWidth="2" fill="none"/><path d="M10 9l5 3-5 3V9z" fill="currentColor"/></svg>
+          <svg className="w-16 h-16 text-gray-500 mb-4" fill="none" viewBox="0 0 48 48" width="64" height="48" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="12" width="32" height="28" rx="3" fill="#6B7280"/><path d="M8 15a3 3 0 0 1 3-3h7.172a3 3 0 0 1 2.121.879l2.828 2.828A3 3 0 0 0 25.243 16H40a3 3 0 0 1 3 3v18a3 3 0 0 1-3 3H11a3 3 0 0 1-3-3V15Z" fill="#9CA3AF"/></svg>
           <p className="text-gray-400 text-lg font-semibold">No pending projects to upload!</p>
         </div>
       ) : (
