@@ -122,7 +122,7 @@ export default function ScriptSection({
           </>
         ) : (
           <>
-            <div className="prose prose-invert max-w-none bg-gray-900 p-6 rounded-lg border border-gray-700 overflow-auto min-h-[350px] max-h-[600px]">
+            <div className="prose prose-invert max-w-none bg-gray-900 p-6 rounded-lg border border-gray-700 overflow-auto min-h-[350px] max-h-[400px]">
               <ReactMarkdown>{script}</ReactMarkdown>
             </div>
           </>
