@@ -6,7 +6,7 @@ const ProxyAvatarUpload = require('../models/ProxyAvatarUpload');
 router.post('/', async (req, res) => {
   try {
     const { topic, avatarId, script, voiceId } = req.body;
-    const n8nRes = await fetch('https://n8n.srv810314.hstgr.cloud/webhook/avatar', {
+    const n8nRes = await fetch(`${process.env.N8N_WEBHOOK_BASE}/avatar`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ topic, avatarId, script, voiceId }),
@@ -44,7 +44,7 @@ router.post('/save', async (req, res) => {
       },
       { upsert: true, new: true }
     );
-    await fetch('https://n8n.srv810314.hstgr.cloud/webhook/avatar-video-save', {
+    await fetch(`${process.env.N8N_WEBHOOK_BASE}/avatar-video-save`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ file, drive, status: 'save' }),
@@ -58,7 +58,7 @@ router.post('/save', async (req, res) => {
 router.post('/upload', async (req, res) => {
   try {
     const { file, drive, status, topic, script, title, video, avatarId, voiceId, jobId } = req.body;
-    const n8nRes = await fetch('https://n8n.srv810314.hstgr.cloud/webhook/avatar-video-save', {
+    const n8nRes = await fetch(`${process.env.N8N_WEBHOOK_BASE}/avatar-video-save`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ file, drive, status: 'upload' }),

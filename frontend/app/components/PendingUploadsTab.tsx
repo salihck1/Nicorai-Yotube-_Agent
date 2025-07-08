@@ -39,7 +39,7 @@ export default function PendingUploadsTab() {
 
   useEffect(() => {
     setLoading(true);
-    fetch('http://localhost:5000/api/pending-projects')
+    fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/pending-projects`)
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch pending projects');
         return res.json();
@@ -89,7 +89,7 @@ export default function PendingUploadsTab() {
           voiceId: proxyUpload.voiceId,
           jobId: proxyUpload.jobId
         };
-        const res = await fetch('http://localhost:5000/api/proxy-avatar/upload', {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/proxy-avatar/upload`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
@@ -99,7 +99,7 @@ export default function PendingUploadsTab() {
           throw new Error('Upload failed: ' + errorText);
         }
         setLoading(true);
-        fetch('http://localhost:5000/api/pending-projects')
+        fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/pending-projects`)
           .then(res => res.json())
           .then(data => {
             setPendingProjects(data.scriptHistories || []);
@@ -136,7 +136,7 @@ export default function PendingUploadsTab() {
     formData.append('video', file);
     formData.append('projectId', projectId);
     try {
-      const res = await fetch('http://localhost:5000/api/upload-video', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/upload-video`, {
         method: 'POST',
         body: formData,
       });
@@ -148,7 +148,7 @@ export default function PendingUploadsTab() {
       setUploadedVideoFiles(prev => { const copy = { ...prev }; delete copy[projectId]; return copy; });
       setUploading(prev => { const copy = { ...prev }; delete copy[projectId]; return copy; });
       setLoading(true);
-      fetch('http://localhost:5000/api/pending-projects')
+      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/pending-projects`)
         .then(res => res.json())
         .then(data => {
           setPendingProjects(data.scriptHistories || []);

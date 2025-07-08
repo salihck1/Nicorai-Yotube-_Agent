@@ -6,7 +6,7 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
 
 router.get('/:fileId', async (req, res) => {
   const { fileId } = req.params;
-  let url = `https://drive.google.com/uc?export=download&id=${fileId}`;
+  let url = `${process.env.GOOGLE_DRIVE_DOWNLOAD_URL}&id=${fileId}`;
   try {
     let response = await fetch(url, { redirect: 'manual' });
     let body = await response.text();
@@ -15,7 +15,7 @@ router.get('/:fileId', async (req, res) => {
     const confirmMatch = body.match(/confirm=([0-9A-Za-z_]+)&amp;id=/);
     if (confirmMatch) {
       const confirmToken = confirmMatch[1];
-      url = `https://drive.google.com/uc?export=download&confirm=${confirmToken}&id=${fileId}`;
+      url = `${process.env.GOOGLE_DRIVE_DOWNLOAD_URL}&confirm=${confirmToken}&id=${fileId}`;
       response = await fetch(url);
     } else {
       // If not a confirmation page, re-fetch as a stream

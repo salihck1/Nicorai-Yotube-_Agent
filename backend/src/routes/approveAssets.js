@@ -32,7 +32,7 @@ router.post('/', async (req, res) => {
       tone: data.tone,
       genre: data.genre
     };
-    const response = await fetch('https://n8n.srv810314.hstgr.cloud/webhook/media-regenerate', {
+    const response = await fetch(`${process.env.N8N_WEBHOOK_BASE}/media-regenerate`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

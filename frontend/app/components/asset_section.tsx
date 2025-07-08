@@ -92,7 +92,7 @@ export default function AssetSection({
     console.log('Uploading asset to backend:', { fileName: file.name, fileSize: file.size, type, backendType });
     console.log('FormData:', Array.from(formData.entries()));
 
-    const response = await fetch(`http://localhost:5000/upload/${backendType}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/upload/${backendType}`, {
       method: 'POST',
       body: formData,
     });
@@ -121,7 +121,7 @@ export default function AssetSection({
       console.log('Starting upload for file:', file.name, 'of type:', type);
       const result = await uploadToBackend(file, type);
       const date = new Date().toLocaleString();
-      const proxyLink = `http://localhost:5000/proxy/${result.fileId}`;
+      const proxyLink = `${process.env.NEXT_PUBLIC_API_BASE_URL}/proxy/${result.fileId}`;
       // Store both proxy and Google Drive links
       if (type === 'thumbnails') {
         setLocalThumbnails(prev => [{ src: proxyLink, driveLink: result.link, alt: result.name, date, isDrive: true }, ...prev]);
@@ -231,7 +231,7 @@ export default function AssetSection({
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
-                <img src={thumbnail.fileId ? `http://localhost:5000/proxy/${thumbnail.fileId}` : thumbnail.src} alt={thumbnail.alt} className="w-full h-48 object-cover" crossOrigin="anonymous" />
+                <img src={thumbnail.fileId ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/proxy/${thumbnail.fileId}` : thumbnail.src} alt={thumbnail.alt} className="w-full h-48 object-cover" crossOrigin="anonymous" />
                 <div className="p-4">
                   <p className="text-white font-semibold flex items-center gap-2">{thumbnail.alt}</p>
                   <p className="text-gray-400 text-sm mt-1">{thumbnail.date}</p>
@@ -246,7 +246,7 @@ export default function AssetSection({
                       <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </button>
-                  <img src={thumbnail.fileId ? `http://localhost:5000/proxy/${thumbnail.fileId}` : thumbnail.src} alt={thumbnail.alt} className="w-full h-48 object-cover" crossOrigin="anonymous" />
+                  <img src={thumbnail.fileId ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/proxy/${thumbnail.fileId}` : thumbnail.src} alt={thumbnail.alt} className="w-full h-48 object-cover" crossOrigin="anonymous" />
                   <div className="p-4">
                     <p className="text-white font-semibold flex items-center gap-2">
                       {thumbnail.alt}
@@ -299,7 +299,7 @@ export default function AssetSection({
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
-                <img src={image.fileId ? `http://localhost:5000/proxy/${image.fileId}` : image.src} alt={image.alt} className="w-full h-48 object-cover" crossOrigin="anonymous" />
+                <img src={image.fileId ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/proxy/${image.fileId}` : image.src} alt={image.alt} className="w-full h-48 object-cover" crossOrigin="anonymous" />
                 <div className="p-4">
                   <p className="text-white font-semibold flex items-center gap-2">{image.alt}</p>
                   <p className="text-gray-400 text-sm mt-1">{image.date}</p>
@@ -314,7 +314,7 @@ export default function AssetSection({
                       <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </button>
-                  <img src={image.fileId ? `http://localhost:5000/proxy/${image.fileId}` : image.src} alt={image.alt} className="w-full h-48 object-cover" crossOrigin="anonymous" />
+                  <img src={image.fileId ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/proxy/${image.fileId}` : image.src} alt={image.alt} className="w-full h-48 object-cover" crossOrigin="anonymous" />
                   <div className="p-4">
                     <p className="text-white font-semibold flex items-center gap-2">
                       {image.alt}
@@ -392,7 +392,7 @@ export default function AssetSection({
                   )}
                   <audio
                     controls
-                    src={audio.fileId ? `http://localhost:5000/proxy/${audio.fileId}` : (audio.directDownloadUrl || audio.src)}
+                    src={audio.fileId ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/proxy/${audio.fileId}` : (audio.directDownloadUrl || audio.src)}
                     className="w-full mb-2"
                     crossOrigin="anonymous"
                     preload="auto"
@@ -403,7 +403,7 @@ export default function AssetSection({
                           mediaRefs.current.push(el);
                           // Set the source directly using a different approach
                           if (audio.fileId) {
-                            el.src = `http://localhost:5000/proxy/${audio.fileId}`;
+                            el.src = `${process.env.NEXT_PUBLIC_API_BASE_URL}/proxy/${audio.fileId}`;
                           } else if (audio.directDownloadUrl) {
                             el.src = audio.directDownloadUrl;
                           } else if (audio.src) {
@@ -509,7 +509,7 @@ export default function AssetSection({
                   )}
                   <video
                     controls
-                    src={video.fileId ? `http://localhost:5000/proxy/${video.fileId}` : video.src}
+                    src={video.fileId ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/proxy/${video.fileId}` : video.src}
                     className="w-full rounded-md"
                     crossOrigin="anonymous"
                     preload="auto"
@@ -521,7 +521,7 @@ export default function AssetSection({
                           mediaRefs.current.push(el);
                           // Set the source directly using a different approach
                           if (video.fileId) {
-                            el.src = `http://localhost:5000/proxy/${video.fileId}`;
+                            el.src = `${process.env.NEXT_PUBLIC_API_BASE_URL}/proxy/${video.fileId}`;
                           } else if (video.directDownloadUrl) {
                             el.src = video.directDownloadUrl;
                           } else if (video.src) {

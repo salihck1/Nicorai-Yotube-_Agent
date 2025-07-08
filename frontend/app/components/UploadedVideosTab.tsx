@@ -58,7 +58,7 @@ export default function UploadedVideosTab() {
 
   useEffect(() => {
     setLoading(true);
-    fetch('http://localhost:5000/api/uploaded-projects')
+    fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/uploaded-projects`)
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch uploaded projects');
         return res.json();

@@ -57,7 +57,7 @@ router.post('/', upload.single('video'), async (req, res) => {
       fields: 'id, webViewLink, webContentLink',
     });
     const videoFileId = driveResponse.data.id;
-    const videoLink = `https://drive.google.com/file/d/${videoFileId}/view`;
+    const videoLink = `${process.env.GOOGLE_DRIVE_VIEW_URL}/${videoFileId}/view`;
     // Share file with anyone with the link
     await drive.permissions.create({
       fileId: videoFileId,
@@ -69,7 +69,7 @@ router.post('/', upload.single('video'), async (req, res) => {
       videoLink,
       driveLink: driveLink,
     };
-    const n8nRes = await fetch('https://n8n.srv810314.hstgr.cloud/webhook/youtube', {
+    const n8nRes = await fetch(`${process.env.N8N_WEBHOOK_BASE}/youtube`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(n8nPayload),

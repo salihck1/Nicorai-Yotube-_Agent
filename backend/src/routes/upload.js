@@ -69,7 +69,7 @@ router.post('/:type', upload.single('file'), async (req, res) => {
     });
 
     // Get the web link
-    const fileLink = `https://drive.google.com/file/d/${driveRes.data.id}/view`;
+    const fileLink = `${process.env.GOOGLE_DRIVE_VIEW_URL}/${driveRes.data.id}/view`;
     res.json({
       success: true,
       fileId: driveRes.data.id,

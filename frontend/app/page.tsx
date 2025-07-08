@@ -104,14 +104,14 @@ export default function Home() {
 
   const getProxyUrl = (fileId: string, type: string) => {
     if (!fileId) return null;
-    return `http://localhost:5000/proxy/${fileId}`;
+    return `${process.env.NEXT_PUBLIC_API_BASE_URL}/proxy/${fileId}`;
   };
 
 
   // Add a utility function to create a direct download link for Google Drive files
   const getDirectDownloadUrl = (fileId: string) => {
     if (!fileId) return null;
-    return `https://docs.google.com/uc?export=download&id=${fileId}`;
+    return `${process.env.NEXT_PUBLIC_GOOGLE_DRIVE_DOWNLOAD_URL}&id=${fileId}`;
   };
 
 
@@ -160,7 +160,7 @@ export default function Home() {
       // Show a loading state
       setRegeneratingAsset({ type, index });
      
-      const response = await fetch('http://localhost:5000/media-regenerate', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/media-regenerate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -309,7 +309,7 @@ export default function Home() {
         id,
         timestamp,
       }
-      const response = await fetch('https://n8n.srv810314.hstgr.cloud/webhook/frontend', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_N8N_WEBHOOK_BASE}/frontend`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -369,14 +369,14 @@ export default function Home() {
           timestamp: responseTimestamp,
         };
         console.log('Refine Script payload being sent to backend:', refinePayload);
-        response = await fetch('http://localhost:5000/api/refine-script', {
+        response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/refine-script`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(refinePayload),
         });
       } else {
         setIsGeneratingMedia(true);
-        response = await fetch('https://n8n.srv810314.hstgr.cloud/webhook/approve', {
+        response = await fetch(`${process.env.NEXT_PUBLIC_N8N_WEBHOOK_BASE}/approve`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
@@ -723,7 +723,7 @@ export default function Home() {
       console.log('Full payload being sent:', JSON.stringify(payload, null, 2));
 
 
-      const response = await fetch('http://localhost:5000/approve-assets', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/approve-assets`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -779,7 +779,7 @@ export default function Home() {
     setAvatarIsProcessing(true);
     setAvatarHasScript(false);
     try {
-      const res = await fetch('https://n8n.srv810314.hstgr.cloud/webhook/avatarscript', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_N8N_WEBHOOK_BASE}/avatarscript`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ topic: avatarFormData.topic, tone: avatarFormData.tone, genre: avatarFormData.genre, time: avatarFormData.time }),
@@ -1001,7 +1001,7 @@ export default function Home() {
                     };
                     console.log('Refine Script payload being sent to backend:', refinePayload);
                     try {
-                      const res = await fetch('http://localhost:5000/api/refine-script', {
+                      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/refine-script`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(refinePayload),
@@ -1035,7 +1035,7 @@ export default function Home() {
                       script: avatarScript,
                       voiceId: selectedVoiceId,
                     });
-                    const res = await fetch('http://localhost:5000/api/proxy-avatar', {
+                    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/proxy-avatar`, {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json' },
                       body: JSON.stringify({
@@ -1121,7 +1121,7 @@ export default function Home() {
                             jobId: proxyAvatarJobId
                           };
                           console.log('Saving avatar video details:', payload);
-                          const res = await fetch('http://localhost:5000/api/proxy-avatar/save', {
+                          const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/proxy-avatar/save`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify(payload),
@@ -1157,7 +1157,7 @@ export default function Home() {
                             jobId: proxyAvatarJobId
                           };
                           console.log('Saving avatar video details:', payload);
-                          const res = await fetch('http://localhost:5000/api/proxy-avatar/upload', {
+                          const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/proxy-avatar/upload`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify(payload),

@@ -11,7 +11,7 @@ interface NewsArticle {
   category?: string[];
 }
  
-const API_KEY = 'pub_2dbed5323b614a19904dd5087f02844c';
+const API_KEY = process.env.NEXT_PUBLIC_NEWS_API_KEY;
 const ENDPOINT = `https://newsdata.io/api/1/news?apikey=${API_KEY}&q=AI%20artificial%20intelligence&language=en&category=technology`;
  
 function formatDate(dateStr?: string) {

@@ -5,7 +5,7 @@ const router = express.Router();
 router.post('/', async (req, res) => {
   const { script, feedback, topic, tone, genre, responseId, timestamp } = req.body;
   try {
-    const n8nResponse = await fetch('https://n8n.srv810314.hstgr.cloud/webhook/avatarfeedback', {
+    const n8nResponse = await fetch(`${process.env.N8N_WEBHOOK_BASE}/avatarfeedback`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ script, feedback, topic, tone, genre, responseId, timestamp })
