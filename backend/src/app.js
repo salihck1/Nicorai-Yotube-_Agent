@@ -14,10 +14,23 @@ const mongoose = require('mongoose');
 
 const app = express();
 
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://82.25.105.184:3000",
+  "http://srv810314.hstgr.cloud",
+  "https://srv810314.hstgr.cloud"
+];
+ 
 app.use(cors({
-    origin: process.env.FRONTEND_ORIGIN,
-    credentials: true
-  }));
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true
+}));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
