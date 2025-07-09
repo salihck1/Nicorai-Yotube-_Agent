@@ -915,7 +915,7 @@ export default function Home() {
                 </div>
                 <div className="bg-gray-900 rounded-xl shadow-lg p-4 w-full max-w-full max-h-[350px] overflow-y-auto flex flex-col items-center">
                   <div className="w-full">
-                    <NewsBanner />
+                    <NewsBanner topic={formData.topic || 'AI'} />
                   </div>
                 </div>
               </div>

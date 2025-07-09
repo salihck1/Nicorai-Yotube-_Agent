@@ -11,8 +11,11 @@ interface NewsArticle {
   category?: string[];
 }
  
-const API_KEY = process.env.NEXT_PUBLIC_NEWS_API_KEY;
-const ENDPOINT = `https://newsdata.io/api/1/news?apikey=${API_KEY}&q=AI%20artificial%20intelligence&language=en&category=technology`;
+interface NewsBannerProps {
+  topic: string;
+}
+ 
+const ENDPOINT = 'https://n8n.srv810314.hstgr.cloud/webhook/news';
  
 function formatDate(dateStr?: string) {
   if (!dateStr) return '';
@@ -20,7 +23,7 @@ function formatDate(dateStr?: string) {
   return date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
 }
  
-export default function NewsBanner() {
+export default function NewsBanner({ topic }: NewsBannerProps) {
   const [articles, setArticles] = useState<NewsArticle[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -28,17 +31,21 @@ export default function NewsBanner() {
  
   useEffect(() => {
     setLoading(true);
-    fetch(ENDPOINT)
+    fetch(ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ topic: topic || 'AI' }),
+    })
       .then(res => res.json())
       .then(data => {
-        setArticles(Array.isArray(data.results) ? data.results.slice(0, 6) : []);
+        setArticles(Array.isArray(data.results) ? data.results.slice(0, 20) : []);
         setLoading(false);
       })
       .catch(err => {
         setError('Failed to load news.');
         setLoading(false);
       });
-  }, []);
+  }, [topic]);
  
   if (loading) {
     return (
