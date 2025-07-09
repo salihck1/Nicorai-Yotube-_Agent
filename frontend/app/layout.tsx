@@ -18,8 +18,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} bg-gray-900 text-gray-100`}>
+    <html lang="en" className="min-h-screen overflow-auto">
+      <body className={`${inter.className} bg-gray-900 text-gray-100 min-h-screen overflow-auto`}>
         <header className="bg-gray-800 shadow-md p-2 flex items-center justify-center fixed top-0 left-0 w-full z-50" style={{height: '72px'}}>
           <YouTubeIcon />
           <div className="ml-3">
