@@ -102,33 +102,35 @@ const ProcessingToast = () => {
       transition: 'all 0.3s',
       maxWidth: '90vw',
     }}>
-      <span style={{ fontSize: 22, color: '#f87171' }}>●</span>
       <span style={{ flex: 1 }}>
-        {isProcessing
-          ? `Processing on "${tabLabels[processedTab] || processedTab}" tab...`
-          : 'Process completed.'}
+        {isProcessing ? (
+          <>
+            <span style={{ fontSize: 22, color: '#f87171', marginRight: 10 }}>●</span>
+            Processing on "{tabLabels[processedTab] || processedTab}" tab...
+          </>
+        ) : (
+          <>
+            {/* Only one red dot here */}
+            <span style={{ fontSize: 22, color: '#f87171', marginRight: 10 }}>●</span>
+            Process completed.{' '}
+            <span
+              style={{
+                color: '#f87171',
+                textDecoration: 'underline',
+                cursor: 'pointer',
+                fontWeight: 600,
+                marginLeft: 2
+              }}
+              onClick={() => {
+                router.push(`/?tab=${processedTab}`);
+                setProcessedTab(null);
+              }}
+            >
+              Click here to view
+            </span>
+          </>
+        )}
       </span>
-      {!isProcessing && (
-        <button
-          style={{
-            marginLeft: 16,
-            background: '#f87171',
-            color: '#fff',
-            border: 'none',
-            borderRadius: 8,
-            padding: '6px 14px',
-            cursor: 'pointer',
-            fontWeight: 600,
-            fontSize: 15,
-          }}
-          onClick={() => {
-            router.push(`/?tab=${processedTab}`);
-            setProcessedTab(null);
-          }}
-        >
-          Go to {tabLabels[processedTab] || processedTab}
-        </button>
-      )}
       <button
         aria-label="Minimize toast notification"
         style={{
