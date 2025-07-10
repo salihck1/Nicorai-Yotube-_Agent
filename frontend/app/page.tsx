@@ -65,8 +65,6 @@ export default function Home() {
   const [avatarIsEditing, setAvatarIsEditing] = useState(false);
   const [avatarStatusMessage, setAvatarStatusMessage] = useState('');
   const [avatarFeedback, setAvatarFeedback] = useState('');
-  const [avatarIsProcessing, setAvatarIsProcessing] = useState(false);
-  const [avatarIsGeneratingMedia, setAvatarIsGeneratingMedia] = useState(false);
   const [avatarLoadingProgress, setAvatarLoadingProgress] = useState(0);
   const [avatarHasScript, setAvatarHasScript] = useState(false);
   const [avatarVideoUrl, setAvatarVideoUrl] = useState<string | null>(null);
@@ -349,7 +347,6 @@ export default function Home() {
 
   const handleApproveOrRefineScript = async () => {
     try {
-      setIsProcessing(true)
       setGlobalProcessing(true)
       setGlobalProcessingMessage('Processing your script...')
       console.log('[handleApproveOrRefineScript] Setting processedTab to "new"');
@@ -401,7 +398,7 @@ export default function Home() {
       if (!data) {
         console.error("Backend response data is null or undefined.");
         alert('Error processing script: Received empty or invalid response from backend.');
-        setIsProcessing(false);
+        setGlobalProcessing(false);
         setIsGeneratingMedia(false);
         return;
       }
@@ -582,7 +579,6 @@ export default function Home() {
       setIsGeneratingMedia(false);
       setLoadingProgress(0);
     } finally {
-      setIsProcessing(false)
       setGlobalProcessing(false)
     }
   }
@@ -620,8 +616,9 @@ export default function Home() {
       return;
     }
 
-
     setIsApprovingAssets(true);
+    setGlobalProcessing(true);
+    setProcessedTab('new');
     try {
       // Format the media data into a single array
       const allImages = [
@@ -782,13 +779,13 @@ export default function Home() {
       alert(`Error approving assets: ${error.message}`);
     } finally {
       setIsApprovingAssets(false);
+      setGlobalProcessing(false);
     }
   };
 
 
   async function handleAvatarSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setAvatarIsProcessing(true);
     setGlobalProcessing(true);
     setGlobalProcessingMessage('Generating avatar video...');
     console.log('[handleAvatarSubmit] Setting processedTab to "avatar"');
@@ -826,7 +823,6 @@ export default function Home() {
       setAvatarEditedScript('Failed to generate script.');
       setAvatarHasScript(true);
     } finally {
-      setAvatarIsProcessing(false);
       setGlobalProcessing(false);
     }
   }
@@ -984,8 +980,8 @@ export default function Home() {
                 videoUrl={avatarVideoUrl}
                 feedback={avatarFeedback}
                 setFeedback={setAvatarFeedback}
-                isProcessing={avatarIsProcessing}
-                isGeneratingMedia={avatarIsGeneratingMedia}
+                isProcessing={globalProcessing}
+                isGeneratingMedia={isGeneratingMedia}
                 loadingProgress={avatarLoadingProgress}
                 handleSaveEdit={() => {
                   setAvatarScript(avatarEditedScript);
@@ -1006,7 +1002,7 @@ export default function Home() {
                 handleApproveOrRefineScript={async () => {
                   if (avatarFeedback.trim()) {
                     // REFINEMENT LOGIC: Only send script and feedback for refinement
-                    setAvatarIsProcessing(true);
+                    setGlobalProcessing(true);
                     const refinePayload = {
                       script: avatarEditedScript,
                       feedback: avatarFeedback,
@@ -1037,12 +1033,12 @@ export default function Home() {
                     } catch (err) {
                       setAvatarStatusMessage('Error refining script.');
                     } finally {
-                      setAvatarIsProcessing(false);
+                      setGlobalProcessing(false);
                     }
                     return;
                   }
                   // APPROVAL LOGIC: Only run this if feedback is empty
-                  setAvatarIsProcessing(true);
+                  setGlobalProcessing(true);
                   setProcessedTab('avatar'); // <-- Ensure this is called
                   console.log('Approve Script clicked: starting avatar video generation');
                   // Send topic, avatarId, and script to backend proxy
@@ -1087,7 +1083,7 @@ export default function Home() {
                     console.error('Error during avatar video generation:', err);
                     setAvatarStatusMessage('Failed to generate avatar video.');
                   } finally {
-                    setAvatarIsProcessing(false);
+                    setGlobalProcessing(false);
                     console.log('Avatar video generation process finished.');
                   }
                 }}
@@ -1210,7 +1206,7 @@ export default function Home() {
                 formData={avatarFormData}
                 setFormData={setAvatarFormData}
                 handleSubmit={handleAvatarSubmit}
-                isLoading={avatarIsProcessing}
+                isLoading={globalProcessing}
                 title="Create Avatar Video"
               />
             </div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import NewsBanner from './NewsBanner';
+import { useProcessing } from './ProcessingContext';
 
 
 interface FormData {
@@ -45,7 +46,6 @@ export default function ScriptSection({
   videoUrl,
   feedback,
   setFeedback,
-  isProcessing,
   isGeneratingMedia,
   loadingProgress,
   handleSaveEdit,
@@ -58,6 +58,7 @@ export default function ScriptSection({
   setMediaGenerated,
   approveDisabled
 }: ScriptSectionProps) {
+  const { isProcessing: globalProcessing } = useProcessing();
   
   if (isGeneratingMedia) {
     return (
@@ -161,9 +162,9 @@ export default function ScriptSection({
                 onClick={handleApproveOrRefineScript}
                 className={`flex-1 py-2 px-4 rounded-lg font-semibold text-base transition-colors duration-200 ${feedback.trim() ? 'bg-red-600 hover:bg-red-700 focus:ring-red-500' : 'bg-green-600 hover:bg-green-700 focus:ring-green-500'} text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800`}
                 type="button"
-                disabled={isProcessing || approveDisabled}
+                disabled={globalProcessing || approveDisabled}
               >
-                {isProcessing ? 'Processing...' : feedback.trim() ? 'Refine Script' : 'Approve Script'}
+                {globalProcessing ? 'Processing...' : feedback.trim() ? 'Refine Script' : 'Approve Script'}
               </button>
               <button
                 onClick={() => {
