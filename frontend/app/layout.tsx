@@ -2,6 +2,8 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import React from 'react'
+import { ProcessingProvider } from './components/ProcessingContext';
+import ProcessingToast from './components/ProcessingToast';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -20,14 +22,17 @@ export default function RootLayout({
   return (
     <html lang="en" className="min-h-screen overflow-auto">
       <body className={`${inter.className} bg-gray-900 text-gray-100 min-h-screen overflow-auto`}>
-        <header className="bg-gray-800 shadow-md p-2 flex items-center justify-center fixed top-0 left-0 w-full z-50" style={{height: '72px'}}>
-          <YouTubeIcon />
-          <div className="ml-3">
-            <h1 className="text-2xl font-bold text-red-500">Script Studio</h1>
-            <p className="text-sm text-gray-400">YouTube Content Creator</p>
-          </div>
-        </header>
-        <div style={{paddingTop: '72px'}}>{children}</div>
+        <ProcessingProvider>
+          <header className="bg-gray-800 shadow-md p-2 flex items-center justify-center fixed top-0 left-0 w-full z-50" style={{height: '72px'}}>
+            <YouTubeIcon />
+            <div className="ml-3">
+              <h1 className="text-2xl font-bold text-red-500">Script Studio</h1>
+              <p className="text-sm text-gray-400">YouTube Content Creator</p>
+            </div>
+          </header>
+          <div style={{paddingTop: '72px'}}>{children}</div>
+          <ProcessingToast />
+        </ProcessingProvider>
       </body>
     </html>
   )

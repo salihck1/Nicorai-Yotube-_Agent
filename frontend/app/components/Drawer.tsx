@@ -1,5 +1,5 @@
 import React, { useState, ReactNode, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 
 interface DrawerProps {
   newProject: ReactNode;
@@ -19,11 +19,9 @@ const tabList = [
 export default function Drawer({ newProject, pendingUploads, uploadedVideos, createAvatarVideo, defaultTab }: DrawerProps) {
   const [selectedTab, setSelectedTab] = useState<'new' | 'pending' | 'uploaded' | 'avatar'>(defaultTab || 'new');
   const [mobileOpen, setMobileOpen] = useState(false);
-
-  // Read the tab from URL parameters
   const searchParams = useSearchParams();
+  const router = useRouter();
 
-  // Update the selected tab when the URL parameter changes
   useEffect(() => {
     const tabParam = searchParams.get('tab') as 'new' | 'pending' | 'uploaded' | 'avatar';
     if (tabParam && ['new', 'pending', 'uploaded', 'avatar'].includes(tabParam)) {
@@ -31,7 +29,6 @@ export default function Drawer({ newProject, pendingUploads, uploadedVideos, cre
     }
   }, [searchParams]);
 
-  // Drawer content for reuse
   const drawerContent = (
     <nav className="h-full bg-gray-800 text-white flex flex-col py-8 px-4 z-30">
       {tabList.map(tab => (
@@ -42,7 +39,8 @@ export default function Drawer({ newProject, pendingUploads, uploadedVideos, cre
           }`}
           onClick={() => {
             setSelectedTab(tab.key as any);
-            setMobileOpen(false); // Close drawer on mobile after selection
+            setMobileOpen(false);
+            router.push(`/?tab=${tab.key}`);
           }}
         >
           {tab.label}

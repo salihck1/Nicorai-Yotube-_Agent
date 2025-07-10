@@ -11,6 +11,7 @@ import PendingUploadsTab from './components/PendingUploadsTab'
 import UploadedVideosTab from './components/UploadedVideosTab'
 import { v4 as uuidv4 } from 'uuid'
 import NewsBanner from './components/NewsBanner'
+import { useProcessing } from './components/ProcessingContext';
 
 
 interface FormData {
@@ -79,6 +80,7 @@ export default function Home() {
   const defaultTab = searchParams.get('tab') as 'new' | 'pending' | 'uploaded' | 'avatar' || 'new';
   const [activeTab, setActiveTab] = useState(defaultTab);
   const highlightId = searchParams.get('highlight');
+  const { isProcessing: globalProcessing, setIsProcessing: setGlobalProcessing, setMessage: setGlobalProcessingMessage, setProcessedTab } = useProcessing();
 
  
   const extractGoogleDriveFileId = (url: string) => {
@@ -299,6 +301,10 @@ export default function Home() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
+    setGlobalProcessing(true)
+    setGlobalProcessingMessage('Generating your script...')
+    console.log('[handleSubmit] Setting processedTab to "new"');
+    setProcessedTab('new')
     setHasScript(false)
     try {
       // Generate unique ID and timestamp for initial submission (if needed)
@@ -328,6 +334,7 @@ export default function Home() {
       alert('Error generating script. Please try again.')
     } finally {
       setIsLoading(false)
+      setGlobalProcessing(false)
     }
   }
 
@@ -343,6 +350,10 @@ export default function Home() {
   const handleApproveOrRefineScript = async () => {
     try {
       setIsProcessing(true)
+      setGlobalProcessing(true)
+      setGlobalProcessingMessage('Processing your script...')
+      console.log('[handleApproveOrRefineScript] Setting processedTab to "new"');
+      setProcessedTab('new')
       setLoadingProgress(0)
       const status = feedback.trim() ? 'refine' : 'approved';
       const payload = {
@@ -572,6 +583,7 @@ export default function Home() {
       setLoadingProgress(0);
     } finally {
       setIsProcessing(false)
+      setGlobalProcessing(false)
     }
   }
 
@@ -777,6 +789,10 @@ export default function Home() {
   async function handleAvatarSubmit(e: React.FormEvent) {
     e.preventDefault();
     setAvatarIsProcessing(true);
+    setGlobalProcessing(true);
+    setGlobalProcessingMessage('Generating avatar video...');
+    console.log('[handleAvatarSubmit] Setting processedTab to "avatar"');
+    setProcessedTab('avatar');
     setAvatarHasScript(false);
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_N8N_WEBHOOK_BASE}/avatarscript`, {
@@ -811,6 +827,7 @@ export default function Home() {
       setAvatarHasScript(true);
     } finally {
       setAvatarIsProcessing(false);
+      setGlobalProcessing(false);
     }
   }
 
@@ -1026,6 +1043,7 @@ export default function Home() {
                   }
                   // APPROVAL LOGIC: Only run this if feedback is empty
                   setAvatarIsProcessing(true);
+                  setProcessedTab('avatar'); // <-- Ensure this is called
                   console.log('Approve Script clicked: starting avatar video generation');
                   // Send topic, avatarId, and script to backend proxy
                   try {
