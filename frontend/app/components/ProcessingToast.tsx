@@ -28,12 +28,16 @@ const ProcessingToast = () => {
   // Only clear processedTab if you are on the process tab AND processing is NOT running
   useEffect(() => {
     if (processedTab && processedTab === currentTab && !isProcessing) {
-      const timeout = setTimeout(() => setProcessedTab(null), 300);
+      const timeout = setTimeout(() => {
+        setProcessedTab(null);
+        setMinimized(false); // Reset minimized state when returning to original tab
+      }, 300);
       return () => clearTimeout(timeout);
     }
   }, [currentTab, processedTab, setProcessedTab, isProcessing]);
 
-  if (!showToast && !minimized) return null;
+  // Only show minimized or expanded toast if showToast is true
+  if (!showToast) return null;
 
   // Minimized icon button
   if (minimized) {
@@ -59,8 +63,20 @@ const ProcessingToast = () => {
         }}
         onClick={() => setMinimized(false)}
       >
-        {/* Notification bell icon */}
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#f87171" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        {isProcessing ? (
+          // Spinner icon
+          <svg width="28" height="28" viewBox="0 0 50 50" style={{ display: 'block' }}>
+            <circle cx="25" cy="25" r="20" fill="none" stroke="#f87171" strokeWidth="5" opacity="0.2" />
+            <circle cx="25" cy="25" r="20" fill="none" stroke="#f87171" strokeWidth="5" strokeDasharray="31.4 125.6" strokeLinecap="round">
+              <animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="1s" repeatCount="indefinite" />
+            </circle>
+          </svg>
+        ) : (
+          // Modern standalone checkmark icon (no circle, red)
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#f87171" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="6 13.5 11 18 18 7" style={{ filter: 'drop-shadow(0 1px 2px rgba(248,113,113,0.15))' }} />
+          </svg>
+        )}
       </button>
     );
   }
