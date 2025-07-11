@@ -40,7 +40,8 @@ export default function Home() {
   const [responseId, setResponseId] = useState<string | null>(null)
   const [responseTimestamp, setResponseTimestamp] = useState<string | null>(null)
   const [feedback, setFeedback] = useState('')
-  const [isProcessing, setIsProcessing] = useState(false)
+  const [isProcessing, setIsProcessing] = useState(false) // Podcast tab local processing
+  const [avatarIsProcessing, setAvatarIsProcessing] = useState(false); // Avatar tab local processing
   const [isGeneratingMedia, setIsGeneratingMedia] = useState(false)
   const [mediaGenerated, setMediaGenerated] = useState(false)
   const [generatedMedia, setGeneratedMedia] = useState<any>(null)
@@ -299,7 +300,8 @@ export default function Home() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
-    setGlobalProcessing(true)
+    setIsProcessing(true) // local
+    setGlobalProcessing(true) // global (for toast)
     setGlobalProcessingMessage('Generating your script...')
     console.log('[handleSubmit] Setting processedTab to "new"');
     setProcessedTab('new')
@@ -332,7 +334,8 @@ export default function Home() {
       alert('Error generating script. Please try again.')
     } finally {
       setIsLoading(false)
-      setGlobalProcessing(false)
+      setIsProcessing(false) // local
+      setGlobalProcessing(false) // global
     }
   }
 
@@ -786,7 +789,8 @@ export default function Home() {
 
   async function handleAvatarSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setGlobalProcessing(true);
+    setAvatarIsProcessing(true); // local
+    setGlobalProcessing(true); // global (for toast)
     setGlobalProcessingMessage('Generating avatar video...');
     console.log('[handleAvatarSubmit] Setting processedTab to "avatar"');
     setProcessedTab('avatar');
@@ -823,7 +827,8 @@ export default function Home() {
       setAvatarEditedScript('Failed to generate script.');
       setAvatarHasScript(true);
     } finally {
-      setGlobalProcessing(false);
+      setAvatarIsProcessing(false); // local
+      setGlobalProcessing(false); // global
     }
   }
 
@@ -1206,7 +1211,7 @@ export default function Home() {
                 formData={avatarFormData}
                 setFormData={setAvatarFormData}
                 handleSubmit={handleAvatarSubmit}
-                isLoading={globalProcessing}
+                isLoading={avatarIsProcessing}
                 title="Create Avatar Video"
               />
             </div>
