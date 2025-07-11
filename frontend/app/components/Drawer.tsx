@@ -53,7 +53,7 @@ export default function Drawer({ newProject, pendingUploads, uploadedVideos, cre
     <div className="flex w-full" style={{ minHeight: '100vh' }}>
       {/* Hamburger for mobile */}
       <button
-        className="md:hidden fixed top-[90px] left-4 z-40 bg-gray-800 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+        className="md:hidden fixed mt-2 top-[90px] left-4 z-40 bg-gray-800 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
         aria-label="Open navigation menu"
         onClick={() => setMobileOpen(true)}
       >

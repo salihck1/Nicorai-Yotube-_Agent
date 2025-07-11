@@ -20,7 +20,7 @@ export default function TopicSection({ formData, setFormData, handleSubmit, isLo
     <div className="w-full max-w-2xl bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-700">
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold text-white mb-2">{title || 'Create Your YouTube Script'}</h1>
-        <p className="text-gray-400">Generate engaging, professional scripts for your YouTube videos</p>
+        <p className="text-gray-400">Generate engaging Avatar video</p>
       </div>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
