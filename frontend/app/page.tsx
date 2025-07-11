@@ -7,6 +7,7 @@ import ScriptSection from './components/script_section'
 import AssetSection from './components/asset_section'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Drawer from './components/Drawer'
+import NextImage from 'next/image';
 import PendingUploadsTab from './components/PendingUploadsTab'
 import UploadedVideosTab from './components/UploadedVideosTab'
 import { v4 as uuidv4 } from 'uuid'
@@ -23,6 +24,7 @@ interface FormData {
 
 
 export default function Home() {
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     topic: '',
     tone: 'Professional',
@@ -893,333 +895,364 @@ export default function Home() {
 
   return (
     <div className="w-full min-h-screen px-2 sm:px-4">
-      <Drawer
-      defaultTab={defaultTab}
-        newProject={
-          mediaGenerated ? (
-            <AssetSection
-              generatedMedia={generatedMedia}
-              regeneratingAsset={regeneratingAsset}
-              isApprovingAssets={isApprovingAssets}
-              showSuccessMessage={showSuccessMessage}
-              mediaRefs={mediaRefs}
-              handleRegenerateMedia={handleRegenerateMedia}
-              handleMediaPlay={handleMediaPlay}
-              handleApproveAssets={handleApproveAssets}
-              setMediaGenerated={setMediaGenerated}
-              localImages={localImages}
-              setLocalImages={setLocalImages}
-              localAudio={localAudio}
-              setLocalAudio={setLocalAudio}
-              localVideos={localVideos}
-              setLocalVideos={setLocalVideos}
-              localThumbnails={localThumbnails}
-              setLocalThumbnails={setLocalThumbnails}
-            />
-          ) : !hasScript ? (
-            (isLoading || isProcessing) ? (
-              <div className="flex flex-col items-center justify-center w-full max-w-2xl mx-auto p-8 bg-gray-800 rounded-xl shadow-lg border border-gray-700">
-                <svg className="animate-spin h-14 w-14 text-red-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
-                </svg>
-                <h2 className="text-2xl font-bold text-white mb-2 text-center">Generating your script...</h2>
-                <div className="w-full bg-gray-700 rounded-full h-2.5 mb-6 overflow-hidden">
-                  <div className="bg-red-500 h-2.5 rounded-full transition-all duration-300" style={{ width: `${loadingProgress || 30}%` }}></div>
-                </div>
-                <div className="w-full flex flex-col items-center mb-2 mt-8">
-                  <h3 className="text-lg font-bold text-red-400 mb-1 text-center">Latest Tech News</h3>
-                  <p className="text-gray-300 text-xs text-center">We're generating your script. Here's some tech news to keep you updated!</p>
-                </div>
-                <div className="bg-gray-900 rounded-xl shadow-lg p-4 w-full max-w-full max-h-[350px] overflow-y-auto flex flex-col items-center">
-                  <div className="w-full">
-                    <NewsBanner topic={formData.topic || 'AI'} />
+      {/* Header with hamburger and logo */}
+      <header className="bg-gray-800 shadow-md p-2 flex items-center justify-between fixed top-0 left-0 w-full z-50" style={{height: '90px'}}>
+        {/* Hamburger icon - left */}
+        <button
+          className="md:hidden ml-0 bg-gray-800 p-2 rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+          aria-label="Open navigation menu"
+          style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
+          onClick={() => setMobileOpen(true)}
+        >
+          <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-white">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        {/* Centered logo - absolutely centered */}
+        <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <NextImage
+            src="/Podnest_logo.svg"
+            alt="Podnest Logo"
+            width={130}
+            height={70}
+            style={{ display: 'block', objectFit: 'contain' }}
+            priority
+          />
+        </div>
+        {/* Empty right side for balance */}
+        <div className="w-10 md:w-0" />
+      </header>
+      <div style={{paddingTop: '92px'}}>
+        <Drawer
+          defaultTab={defaultTab}
+          mobileOpen={mobileOpen}
+          setMobileOpen={setMobileOpen}
+          newProject={
+            mediaGenerated ? (
+              <AssetSection
+                generatedMedia={generatedMedia}
+                regeneratingAsset={regeneratingAsset}
+                isApprovingAssets={isApprovingAssets}
+                showSuccessMessage={showSuccessMessage}
+                mediaRefs={mediaRefs}
+                handleRegenerateMedia={handleRegenerateMedia}
+                handleMediaPlay={handleMediaPlay}
+                handleApproveAssets={handleApproveAssets}
+                setMediaGenerated={setMediaGenerated}
+                localImages={localImages}
+                setLocalImages={setLocalImages}
+                localAudio={localAudio}
+                setLocalAudio={setLocalAudio}
+                localVideos={localVideos}
+                setLocalVideos={setLocalVideos}
+                localThumbnails={localThumbnails}
+                setLocalThumbnails={setLocalThumbnails}
+              />
+            ) : !hasScript ? (
+              (isLoading || isProcessing) ? (
+                <div className="flex flex-col items-center justify-center w-full max-w-2xl mx-auto p-8 bg-gray-800 rounded-xl shadow-lg border border-gray-700">
+                  <svg className="animate-spin h-14 w-14 text-red-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                  </svg>
+                  <h2 className="text-2xl font-bold text-white mb-2 text-center">Generating your script...</h2>
+                  <div className="w-full bg-gray-700 rounded-full h-2.5 mb-6 overflow-hidden">
+                    <div className="bg-red-500 h-2.5 rounded-full transition-all duration-300" style={{ width: `${loadingProgress || 30}%` }}></div>
+                  </div>
+                  <div className="w-full flex flex-col items-center mb-2 mt-8">
+                    <h3 className="text-lg font-bold text-red-400 mb-1 text-center">Latest Tech News</h3>
+                    <p className="text-gray-300 text-xs text-center">We're generating your script. Here's some tech news to keep you updated!</p>
+                  </div>
+                  <div className="bg-gray-900 rounded-xl shadow-lg p-4 w-full max-w-full max-h-[350px] overflow-y-auto flex flex-col items-center">
+                    <div className="w-full">
+                      <NewsBanner topic={formData.topic || 'AI'} />
+                    </div>
                   </div>
                 </div>
-              </div>
+              ) : (
+                <TopicSection
+                  formData={formData}
+                  setFormData={setFormData}
+                  handleSubmit={handleSubmit}
+                  isLoading={isLoading}
+                />
+              )
             ) : (
-              <TopicSection
+              <ScriptSection
                 formData={formData}
-                setFormData={setFormData}
-                handleSubmit={handleSubmit}
-                isLoading={isLoading}
+                script={script}
+                editedScript={editedScript}
+                setEditedScript={setEditedScript}
+                isEditing={isEditing}
+                setIsEditing={setIsEditing}
+                statusMessage={statusMessage}
+                videoUrl={videoUrl}
+                feedback={feedback}
+                setFeedback={setFeedback}
+                isProcessing={isProcessing}
+                isGeneratingMedia={isGeneratingMedia}
+                loadingProgress={loadingProgress}
+                handleSaveEdit={handleSaveEdit}
+                handleDownloadScript={handleDownloadScript}
+                handleApproveOrRefineScript={handleApproveOrRefineScript}
+                setHasScript={setHasScript}
+                setScript={setScript}
+                setVideoUrl={setVideoUrl}
+                setVideoApproval={setVideoApproval}
+                setMediaGenerated={setMediaGenerated}
               />
             )
-          ) : (
-            <ScriptSection
-              formData={formData}
-              script={script}
-              editedScript={editedScript}
-              setEditedScript={setEditedScript}
-              isEditing={isEditing}
-              setIsEditing={setIsEditing}
-              statusMessage={statusMessage}
-              videoUrl={videoUrl}
-              feedback={feedback}
-              setFeedback={setFeedback}
-              isProcessing={isProcessing}
-              isGeneratingMedia={isGeneratingMedia}
-              loadingProgress={loadingProgress}
-              handleSaveEdit={handleSaveEdit}
-              handleDownloadScript={handleDownloadScript}
-              handleApproveOrRefineScript={handleApproveOrRefineScript}
-              setHasScript={setHasScript}
-              setScript={setScript}
-              setVideoUrl={setVideoUrl}
-              setVideoApproval={setVideoApproval}
-              setMediaGenerated={setMediaGenerated}
-            />
-          )
-        }
-        createAvatarVideo={
-          avatarHasScript ? (
-            <div className="flex flex-col items-center w-full">
-              <ScriptSection
-                formData={avatarFormData}
-                script={avatarScript}
-                editedScript={avatarEditedScript}
-                setEditedScript={setAvatarEditedScript}
-                isEditing={avatarIsEditing}
-                setIsEditing={setAvatarIsEditing}
-                statusMessage={avatarStatusMessage}
-                videoUrl={avatarVideoUrl}
-                feedback={avatarFeedback}
-                setFeedback={setAvatarFeedback}
-                isProcessing={globalProcessing}
-                isGeneratingMedia={isGeneratingMedia}
-                loadingProgress={avatarLoadingProgress}
-                handleSaveEdit={() => {
-                  setAvatarScript(avatarEditedScript);
-                  setAvatarIsEditing(false);
-                  setAvatarStatusMessage('Script updated successfully!');
-                  setTimeout(() => setAvatarStatusMessage(''), 2000);
-                }}
-                handleDownloadScript={() => {
-                  // Download logic for avatar script
-                  const blob = new Blob([avatarScript], { type: 'text/plain' });
-                  const url = URL.createObjectURL(blob);
-                  const a = document.createElement('a');
-                  a.href = url;
-                  a.download = 'avatar_script.txt';
-                  a.click();
-                  URL.revokeObjectURL(url);
-                }}
-                handleApproveOrRefineScript={async () => {
-                  if (avatarFeedback.trim()) {
-                    // REFINEMENT LOGIC: Only send script and feedback for refinement
-                    setGlobalProcessing(true);
-                    const refinePayload = {
-                      script: avatarEditedScript,
-                      feedback: avatarFeedback,
-                      topic: avatarFormData.topic,
-                      tone: avatarFormData.tone,
-                      genre: avatarFormData.genre,
-                      responseId: null, // or appropriate value
-                      timestamp: new Date().toISOString(),
-                    };
-                    console.log('Refine Script payload being sent to backend:', refinePayload);
-                    try {
-                      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/refine-script`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(refinePayload),
-                      });
-                      const data = await res.json();
-                      if (res.ok && (data.content?.text || data.text)) {
-                        const newScript = data.content?.text || data.text;
-                        setAvatarScript(newScript);
-                        setAvatarEditedScript(newScript);
-                        setAvatarFeedback('');
-                        setAvatarStatusMessage('Refined script updated!');
-                        setTimeout(() => setAvatarStatusMessage(''), 2000);
-                      } else {
-                        setAvatarStatusMessage('Failed to refine script.');
+          }
+          createAvatarVideo={
+            avatarHasScript ? (
+              <div className="flex flex-col items-center w-full">
+                <ScriptSection
+                  formData={avatarFormData}
+                  script={avatarScript}
+                  editedScript={avatarEditedScript}
+                  setEditedScript={setAvatarEditedScript}
+                  isEditing={avatarIsEditing}
+                  setIsEditing={setAvatarIsEditing}
+                  statusMessage={avatarStatusMessage}
+                  videoUrl={avatarVideoUrl}
+                  feedback={avatarFeedback}
+                  setFeedback={setAvatarFeedback}
+                  isProcessing={globalProcessing}
+                  isGeneratingMedia={isGeneratingMedia}
+                  loadingProgress={avatarLoadingProgress}
+                  handleSaveEdit={() => {
+                    setAvatarScript(avatarEditedScript);
+                    setAvatarIsEditing(false);
+                    setAvatarStatusMessage('Script updated successfully!');
+                    setTimeout(() => setAvatarStatusMessage(''), 2000);
+                  }}
+                  handleDownloadScript={() => {
+                    // Download logic for avatar script
+                    const blob = new Blob([avatarScript], { type: 'text/plain' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'avatar_script.txt';
+                    a.click();
+                    URL.revokeObjectURL(url);
+                  }}
+                  handleApproveOrRefineScript={async () => {
+                    if (avatarFeedback.trim()) {
+                      // REFINEMENT LOGIC: Only send script and feedback for refinement
+                      setGlobalProcessing(true);
+                      const refinePayload = {
+                        script: avatarEditedScript,
+                        feedback: avatarFeedback,
+                        topic: avatarFormData.topic,
+                        tone: avatarFormData.tone,
+                        genre: avatarFormData.genre,
+                        responseId: null, // or appropriate value
+                        timestamp: new Date().toISOString(),
+                      };
+                      console.log('Refine Script payload being sent to backend:', refinePayload);
+                      try {
+                        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/refine-script`, {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify(refinePayload),
+                        });
+                        const data = await res.json();
+                        if (res.ok && (data.content?.text || data.text)) {
+                          const newScript = data.content?.text || data.text;
+                          setAvatarScript(newScript);
+                          setAvatarEditedScript(newScript);
+                          setAvatarFeedback('');
+                          setAvatarStatusMessage('Refined script updated!');
+                          setTimeout(() => setAvatarStatusMessage(''), 2000);
+                        } else {
+                          setAvatarStatusMessage('Failed to refine script.');
+                        }
+                      } catch (err) {
+                        setAvatarStatusMessage('Error refining script.');
+                      } finally {
+                        setGlobalProcessing(false);
                       }
-                    } catch (err) {
-                      setAvatarStatusMessage('Error refining script.');
-                    } finally {
-                      setGlobalProcessing(false);
+                      return;
                     }
-                    return;
-                  }
-                  // APPROVAL LOGIC: Only run this if feedback is empty
-                  setGlobalProcessing(true);
-                  setProcessedTab('avatar'); // <-- Ensure this is called
-                  console.log('Approve Script clicked: starting avatar video generation');
-                  // Send topic, avatarId, and script to backend proxy
-                  try {
-                    console.log('Sending POST to /api/proxy-avatar with:', {
-                      topic: avatarFormData.topic,
-                      avatarId: selectedAvatarId,
-                      script: avatarScript,
-                      voiceId: selectedVoiceId,
-                    });
-                    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/proxy-avatar`, {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({
+                    // APPROVAL LOGIC: Only run this if feedback is empty
+                    setGlobalProcessing(true);
+                    setProcessedTab('avatar'); // <-- Ensure this is called
+                    console.log('Approve Script clicked: starting avatar video generation');
+                    // Send topic, avatarId, and script to backend proxy
+                    try {
+                      console.log('Sending POST to /api/proxy-avatar with:', {
                         topic: avatarFormData.topic,
                         avatarId: selectedAvatarId,
                         script: avatarScript,
                         voiceId: selectedVoiceId,
-                      }),
-                    });
-                    console.log('Received response from backend (raw):', res);
-                    let data;
-                    try {
-                      data = await res.clone().json();
-                      console.log('Response JSON from backend:', data);
-                    } catch (jsonErr) {
-                      console.error('Error parsing JSON from backend:', jsonErr);
-                      data = null;
+                      });
+                      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/proxy-avatar`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                          topic: avatarFormData.topic,
+                          avatarId: selectedAvatarId,
+                          script: avatarScript,
+                          voiceId: selectedVoiceId,
+                        }),
+                      });
+                      console.log('Received response from backend (raw):', res);
+                      let data;
+                      try {
+                        data = await res.clone().json();
+                        console.log('Response JSON from backend:', data);
+                      } catch (jsonErr) {
+                        console.error('Error parsing JSON from backend:', jsonErr);
+                        data = null;
+                      }
+                      if (res.ok && data && data.video && data.video.url) {
+                        setAvatarApprovedVideoUrl(data.video.url);
+                        setAvatarVideoDetails(data);
+                        setAvatarStatusMessage('Script approved!');
+                        setBottomStatusMessage('');
+                        setTimeout(() => setAvatarStatusMessage(''), 3000);
+                      } else {
+                        setAvatarApprovedVideoUrl(null);
+                        setAvatarStatusMessage('Error occurred while generating avatar video.');
+                        setBottomStatusMessage('');
+                      }
+                    } catch (err) {
+                      console.error('Error during avatar video generation:', err);
+                      setAvatarStatusMessage('Failed to generate avatar video.');
+                    } finally {
+                      setGlobalProcessing(false);
+                      console.log('Avatar video generation process finished.');
                     }
-                    if (res.ok && data && data.video && data.video.url) {
-                      setAvatarApprovedVideoUrl(data.video.url);
-                      setAvatarVideoDetails(data);
-                      setAvatarStatusMessage('Script approved!');
-                      setBottomStatusMessage('');
-                      setTimeout(() => setAvatarStatusMessage(''), 3000);
-                    } else {
-                      setAvatarApprovedVideoUrl(null);
-                      setAvatarStatusMessage('Error occurred while generating avatar video.');
-                      setBottomStatusMessage('');
-                    }
-                  } catch (err) {
-                    console.error('Error during avatar video generation:', err);
-                    setAvatarStatusMessage('Failed to generate avatar video.');
-                  } finally {
-                    setGlobalProcessing(false);
-                    console.log('Avatar video generation process finished.');
-                  }
-                }}
-                setHasScript={setAvatarHasScript}
-                setScript={setAvatarScript}
-                setVideoUrl={setAvatarVideoUrl}
-                setVideoApproval={setAvatarVideoApproval}
-                setMediaGenerated={() => {}}
-                approveDisabled={!avatarFeedback.trim() && !selectedAvatar}
-              />
-              {/* Avatar selection section */}
-              <div className="w-full max-w-4xl mt-8 flex flex-col items-center">
-                <h3 className="text-xl font-bold text-white mb-4">Select an Avatar</h3>
-                <div className="flex gap-6 justify-center">
-                  {avatarImages.map((src, idx) => (
-                    <div key={src} className="flex flex-col items-center">
-                      <button
-                        className={`rounded-full border-4 transition-all duration-200 ${selectedAvatar === src ? 'border-red-500 scale-110' : 'border-transparent'} focus:outline-none`}
-                        onClick={() => { setSelectedAvatar(src); setSelectedAvatarId(avatarIds[idx]); setSelectedVoiceId(voiceIds[idx]); }}
-                      >
-                        <img src={src} alt={avatarNames[idx]} className="w-32 h-32 rounded-full object-cover" />
-                      </button>
-                      <span className="mt-2 text-white font-medium text-lg">{avatarNames[idx]}</span>
-                    </div>
-                  ))}
-                </div>
-                {!selectedAvatar && <p className="text-red-400 mt-4">Please select an avatar to approve the script.</p>}
-              </div>
-              {/* Video player after approval */}
-              {avatarApprovedVideoUrl && (
-                <div className="w-full max-w-2xl mt-10 flex flex-col items-center">
-                  <h3 className="text-xl font-bold text-white mb-4">Generated Avatar Video</h3>
-                  <video src={avatarApprovedVideoUrl} controls className="w-full rounded-lg bg-black" />
-                  <div className="flex flex-row gap-4 mt-4">
-                    <button
-                      className="px-6 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition"
-                      onClick={async () => {
-                        try {
-                          const payload = {
-                            file: avatarVideoDetails?.file,
-                            video: avatarVideoDetails?.video,
-                            drive: avatarVideoDetails?.drivefolder,
-                            status: 'pending',
-                            topic: avatarFormData.topic,
-                            script: avatarScript,
-                            title: avatarVideoDetails?.title,
-                            avatarId: selectedAvatarId,
-                            voiceId: selectedVoiceId,
-                            jobId: proxyAvatarJobId
-                          };
-                          console.log('Saving avatar video details:', payload);
-                          const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/proxy-avatar/save`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(payload),
-                          });
-                          if (res.ok) {
-                            setBottomStatusMessage('Project saved to Pending Uploads');
-                            // Use window.location for a full page reload and redirect
-                            window.location.href = '/?tab=pending';
-                          } else {
-                            setBottomStatusMessage('Failed to save Project.');
-                          }
-                        } catch (err) {
-                          setBottomStatusMessage('Error saving Project.');
-                        }
-                      }}
-                    >
-                      Save to pending
-                    </button>
-                    <button
-                      className="px-6 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
-                      onClick={async () => {
-                        try {
-                          const payload = {
-                            file: avatarVideoDetails?.file,
-                            video: avatarVideoDetails?.video,
-                            drive: avatarVideoDetails?.drivefolder,
-                            status: 'upload',
-                            topic: avatarFormData.topic,
-                            script: avatarScript,
-                            title: avatarVideoDetails?.title,
-                            avatarId: selectedAvatarId,
-                            voiceId: selectedVoiceId,
-                            jobId: proxyAvatarJobId
-                          };
-                          console.log('Saving avatar video details:', payload);
-                          const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/proxy-avatar/upload`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(payload),
-                          });
-                          const data = await res.json();
-                          console.log('Response from /api/proxy-avatar/upload:', data);
-                          // Optionally, you could send a follow-up request to save youtubelink/title if needed
-                          if (res.ok) {
-                            setBottomStatusMessage('Video published');
-
-                            window.location.href = '/?tab=uploaded';
-                          } else {
-                            setBottomStatusMessage('Failed to publish video.');
-                          }
-                        } catch (err) {
-                          setBottomStatusMessage('Error saving Project.');
-                        }
-                      }}
-                    >
-                      Upload to YouTube
-                    </button>
+                  }}
+                  setHasScript={setAvatarHasScript}
+                  setScript={setAvatarScript}
+                  setVideoUrl={setAvatarVideoUrl}
+                  setVideoApproval={setAvatarVideoApproval}
+                  setMediaGenerated={() => {}}
+                  approveDisabled={!avatarFeedback.trim() && !selectedAvatar}
+                />
+                {/* Avatar selection section */}
+                <div className="w-full max-w-4xl mt-8 flex flex-col items-center">
+                  <h3 className="text-xl font-bold text-white mb-4">Select an Avatar</h3>
+                  <div className="flex gap-6 justify-center">
+                    {avatarImages.map((src, idx) => (
+                      <div key={src} className="flex flex-col items-center">
+                        <button
+                          className={`rounded-full border-4 transition-all duration-200 ${selectedAvatar === src ? 'border-red-500 scale-110' : 'border-transparent'} focus:outline-none`}
+                          onClick={() => { setSelectedAvatar(src); setSelectedAvatarId(avatarIds[idx]); setSelectedVoiceId(voiceIds[idx]); }}
+                        >
+                          <img src={src} alt={avatarNames[idx]} className="w-32 h-32 rounded-full object-cover" />
+                        </button>
+                        <span className="mt-2 text-white font-medium text-lg">{avatarNames[idx]}</span>
+                      </div>
+                    ))}
                   </div>
+                  {!selectedAvatar && <p className="text-red-400 mt-4">Please select an avatar to approve the script.</p>}
                 </div>
-              )}
-              {bottomStatusMessage && (
-                <div className="text-green-400 mt-4">{bottomStatusMessage}</div>
-              )}
-            </div>
-          ) : (
-            <div className="flex flex-col items-center w-full">
-              <TopicSection
-                formData={avatarFormData}
-                setFormData={setAvatarFormData}
-                handleSubmit={handleAvatarSubmit}
-                isLoading={avatarIsProcessing}
-                title="Create Avatar Video"
-              />
-            </div>
-          )
-        }
-        pendingUploads={<PendingUploadsTab />}
-        uploadedVideos={<UploadedVideosTab />}
-      />
+                {/* Video player after approval */}
+                {avatarApprovedVideoUrl && (
+                  <div className="w-full max-w-2xl mt-10 flex flex-col items-center">
+                    <h3 className="text-xl font-bold text-white mb-4">Generated Avatar Video</h3>
+                    <video src={avatarApprovedVideoUrl} controls className="w-full rounded-lg bg-black" />
+                    <div className="flex flex-row gap-4 mt-4">
+                      <button
+                        className="px-6 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition"
+                        onClick={async () => {
+                          try {
+                            const payload = {
+                              file: avatarVideoDetails?.file,
+                              video: avatarVideoDetails?.video,
+                              drive: avatarVideoDetails?.drivefolder,
+                              status: 'pending',
+                              topic: avatarFormData.topic,
+                              script: avatarScript,
+                              title: avatarVideoDetails?.title,
+                              avatarId: selectedAvatarId,
+                              voiceId: selectedVoiceId,
+                              jobId: proxyAvatarJobId
+                            };
+                            console.log('Saving avatar video details:', payload);
+                            const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/proxy-avatar/save`, {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify(payload),
+                            });
+                            if (res.ok) {
+                              setBottomStatusMessage('Project saved to Pending Uploads');
+                              // Use window.location for a full page reload and redirect
+                              window.location.href = '/?tab=pending';
+                            } else {
+                              setBottomStatusMessage('Failed to save Project.');
+                            }
+                          } catch (err) {
+                            setBottomStatusMessage('Error saving Project.');
+                          }
+                        }}
+                      >
+                        Save to pending
+                      </button>
+                      <button
+                        className="px-6 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
+                        onClick={async () => {
+                          try {
+                            const payload = {
+                              file: avatarVideoDetails?.file,
+                              video: avatarVideoDetails?.video,
+                              drive: avatarVideoDetails?.drivefolder,
+                              status: 'upload',
+                              topic: avatarFormData.topic,
+                              script: avatarScript,
+                              title: avatarVideoDetails?.title,
+                              avatarId: selectedAvatarId,
+                              voiceId: selectedVoiceId,
+                              jobId: proxyAvatarJobId
+                            };
+                            console.log('Saving avatar video details:', payload);
+                            const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/proxy-avatar/upload`, {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify(payload),
+                            });
+                            const data = await res.json();
+                            console.log('Response from /api/proxy-avatar/upload:', data);
+                            // Optionally, you could send a follow-up request to save youtubelink/title if needed
+                            if (res.ok) {
+                              setBottomStatusMessage('Video published');
+
+                              window.location.href = '/?tab=uploaded';
+                            } else {
+                              setBottomStatusMessage('Failed to publish video.');
+                            }
+                          } catch (err) {
+                            setBottomStatusMessage('Error saving Project.');
+                          }
+                        }}
+                      >
+                        Upload to YouTube
+                      </button>
+                    </div>
+                  </div>
+                )}
+                {bottomStatusMessage && (
+                  <div className="text-green-400 mt-4">{bottomStatusMessage}</div>
+                )}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center w-full">
+                <TopicSection
+                  formData={avatarFormData}
+                  setFormData={setAvatarFormData}
+                  handleSubmit={handleAvatarSubmit}
+                  isLoading={avatarIsProcessing}
+                  title="Create Avatar Video"
+                />
+              </div>
+            )
+          }
+          pendingUploads={<PendingUploadsTab />}
+          uploadedVideos={<UploadedVideosTab />}
+        />
+      </div>
     </div>
   );
 }

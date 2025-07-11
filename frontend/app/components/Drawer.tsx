@@ -7,6 +7,8 @@ interface DrawerProps {
   uploadedVideos: ReactNode;
   createAvatarVideo?: ReactNode;
   defaultTab?: 'new' | 'pending' | 'uploaded' | 'avatar';
+  mobileOpen: boolean;
+  setMobileOpen: (open: boolean) => void;
 }
 
 const tabList = [
@@ -16,9 +18,8 @@ const tabList = [
   { key: 'uploaded', label: 'Uploaded Videos' },
 ];
 
-export default function Drawer({ newProject, pendingUploads, uploadedVideos, createAvatarVideo, defaultTab }: DrawerProps) {
+export default function Drawer({ newProject, pendingUploads, uploadedVideos, createAvatarVideo, defaultTab, mobileOpen, setMobileOpen }: DrawerProps) {
   const [selectedTab, setSelectedTab] = useState<'new' | 'pending' | 'uploaded' | 'avatar'>(defaultTab || 'new');
-  const [mobileOpen, setMobileOpen] = useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -51,16 +52,6 @@ export default function Drawer({ newProject, pendingUploads, uploadedVideos, cre
 
   return (
     <div className="flex w-full min-h-screen">
-      {/* Hamburger for mobile */}
-      <button
-        className="md:hidden fixed mt-2 top-[70px] sm:top-[80px] md:top-[90px] left-4 z-40 bg-gray-800 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-        aria-label="Open navigation menu"
-        onClick={() => setMobileOpen(true)}
-      >
-        <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-white">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-      </button>
       {/* Drawer Navigation - Desktop */}
       <div className="hidden md:block fixed left-0 top-[70px] sm:top-[80px] md:top-[90px] h-[calc(100vh-70px)] sm:h-[calc(100vh-80px)] md:h-[calc(100vh-90px)] z-30">
         {drawerContent}
@@ -72,18 +63,19 @@ export default function Drawer({ newProject, pendingUploads, uploadedVideos, cre
           <div className="fixed inset-0 bg-black bg-opacity-40 transition-opacity" onClick={() => setMobileOpen(false)} />
           {/* Drawer */}
           <div className="relative h-full w-4/5 max-w-xs">
-            <div className="fixed left-0 top-[70px] sm:top-[80px] md:top-[90px] h-[calc(100vh-70px)] sm:h-[calc(100vh-80px)] md:h-[calc(100vh-90px)] w-4/5 max-w-xs bg-gray-800 text-white flex flex-col py-8 px-4 animate-slide-in-left shadow-xl z-50">
+            <div className="fixed left-0 top-0 h-full w-4/5 max-w-xs bg-gray-800 text-white flex flex-col py-8 px-4 animate-slide-in-left shadow-2xl rounded-r-2xl border-r-2 border-gray-700 z-50">
               {/* Close button */}
               <button
-                className="absolute top-4 right-4 text-gray-400 hover:text-white focus:outline-none"
+                className="absolute top-7 right-7 p-1.5 rounded-full bg-gray-700/90 border border-gray-600 hover:bg-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-red-500 shadow-md z-50"
                 aria-label="Close navigation menu"
                 onClick={() => setMobileOpen(false)}
+                style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.10)' }}
               >
-                <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <svg width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-white">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
-              {drawerContent}
+              <div className="mt-10">{drawerContent}</div>
             </div>
           </div>
         </div>
