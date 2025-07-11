@@ -50,10 +50,10 @@ export default function Drawer({ newProject, pendingUploads, uploadedVideos, cre
   );
 
   return (
-    <div className="flex w-full" style={{ minHeight: '100vh' }}>
+    <div className="flex w-full min-h-screen">
       {/* Hamburger for mobile */}
       <button
-        className="md:hidden fixed mt-2 top-[90px] left-4 z-40 bg-gray-800 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+        className="md:hidden fixed mt-2 top-[70px] sm:top-[80px] md:top-[90px] left-4 z-40 bg-gray-800 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
         aria-label="Open navigation menu"
         onClick={() => setMobileOpen(true)}
       >
@@ -62,7 +62,7 @@ export default function Drawer({ newProject, pendingUploads, uploadedVideos, cre
         </svg>
       </button>
       {/* Drawer Navigation - Desktop */}
-      <div className="hidden md:block fixed left-0 top-[72px] h-[calc(100vh-72px)] z-30">
+      <div className="hidden md:block fixed left-0 top-[70px] sm:top-[80px] md:top-[90px] h-[calc(100vh-70px)] sm:h-[calc(100vh-80px)] md:h-[calc(100vh-90px)] z-30">
         {drawerContent}
       </div>
       {/* Drawer Navigation - Mobile Overlay */}
@@ -71,8 +71,8 @@ export default function Drawer({ newProject, pendingUploads, uploadedVideos, cre
           {/* Overlay */}
           <div className="fixed inset-0 bg-black bg-opacity-40 transition-opacity" onClick={() => setMobileOpen(false)} />
           {/* Drawer */}
-          <div className="relative h-full w-64">
-            <div className="fixed left-0 top-[72px] h-[calc(100vh-72px)] w-64 bg-gray-800 text-white flex flex-col py-12 px-4 animate-slide-in-left shadow-xl z-50">
+          <div className="relative h-full w-4/5 max-w-xs">
+            <div className="fixed left-0 top-[70px] sm:top-[80px] md:top-[90px] h-[calc(100vh-70px)] sm:h-[calc(100vh-80px)] md:h-[calc(100vh-90px)] w-4/5 max-w-xs bg-gray-800 text-white flex flex-col py-8 px-4 animate-slide-in-left shadow-xl z-50">
               {/* Close button */}
               <button
                 className="absolute top-4 right-4 text-gray-400 hover:text-white focus:outline-none"
@@ -89,9 +89,9 @@ export default function Drawer({ newProject, pendingUploads, uploadedVideos, cre
         </div>
       )}
       {/* Tab Content */}
-      <div className="flex-1 flex items-start justify-center md:ml-64">
+      <div className="flex-1 flex items-start justify-center md:ml-64 px-2 sm:px-4 py-4 mt-8">
         {selectedTab === 'new' && newProject}
-        {selectedTab === 'avatar' && (createAvatarVideo || <div className="w-full max-w-2xl bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-700 flex flex-col items-center justify-center min-h-[300px]"><h2 className="text-2xl font-bold text-white mb-4">Create Avatar Video</h2><p className="text-gray-400">This is a placeholder for the Create Avatar Video tab.</p></div>)}
+        {selectedTab === 'avatar' && (createAvatarVideo || <div className="w-full max-w-2xl bg-gray-800 rounded-xl shadow-lg p-4 sm:p-8 border border-gray-700 flex flex-col items-center justify-center min-h-[200px] sm:min-h-[300px]"><h2 className="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-4">Create Avatar Video</h2><p className="text-gray-400 text-sm sm:text-base">This is a placeholder for the Create Avatar Video tab.</p></div>)}
         {selectedTab === 'pending' && pendingUploads}
         {selectedTab === 'uploaded' && uploadedVideos}
       </div>

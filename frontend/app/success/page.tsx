@@ -19,16 +19,15 @@ export default function SuccessPage() {
         </div>
         <h1 className="text-4xl font-extrabold mb-4 text-center text-red-400 drop-shadow-lg">Assets Approved!</h1>
         <p className="text-xl mb-8 text-gray-200 text-center font-medium">Your media assets have been <span className="text-red-400 font-bold">successfully approved</span> and uploaded.</p>
-        <div className="bg-gray-700/80 rounded-lg p-6 mb-6 w-full text-center shadow-md">
-          <p className="mb-3 text-lg text-gray-100 font-semibold">Your Google Drive Link:</p>
+        <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg p-4 mb-6 w-full max-w-xs mx-auto text-center shadow border border-gray-700 flex flex-col items-center">
           {driveLink ? (
             <a
               href={driveLink}
-              className="inline-block px-6 py-3 rounded-full bg-gradient-to-r from-red-600 to-red-400 text-white font-bold text-lg shadow-lg hover:scale-105 hover:from-red-700 hover:to-red-500 transition-all duration-200"
+              className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-red-600 text-white font-semibold text-base shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 transition-all duration-150 w-full max-w-[180px] mx-auto"
               target="_blank"
               rel="noopener noreferrer"
             >
-              🎬 Click here to view your media
+              View Media
             </a>
           ) : (
             <span className="text-gray-400">No Drive link available.</span>

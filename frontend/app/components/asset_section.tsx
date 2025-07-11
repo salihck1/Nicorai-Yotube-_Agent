@@ -167,17 +167,17 @@ export default function AssetSection({
   };
 
   return (
-    <div className="w-full max-w-7xl flex flex-col items-center justify-center p-4">
+    <div className="w-full max-w-7xl flex flex-col items-center justify-center p-2 sm:p-4">
       {/* Success Message Overlay */}
       {showSuccessMessage && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900">
-          <div className="w-full max-w-md p-8 flex flex-col items-center">
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-90">
+          <div className="w-full max-w-xs sm:max-w-md p-4 sm:p-8 flex flex-col items-center">
             {/* Animated checkmark icon */}
-            <div className="relative w-16 h-16 mb-6">
+            <div className="relative w-12 h-12 sm:w-16 sm:h-16 mb-4 sm:mb-6">
               <div className="absolute inset-0 bg-red-500/10 rounded-full animate-circle"></div>
               <div className="absolute inset-0 flex items-center justify-center">
                 <svg 
-                  className="w-8 h-8 text-red-500" 
+                  className="w-6 h-6 sm:w-8 sm:h-8 text-red-500" 
                   viewBox="0 0 24 24" 
                   fill="none" 
                   xmlns="http://www.w3.org/2000/svg"
@@ -195,35 +195,35 @@ export default function AssetSection({
             </div>
             
             {/* Title */}
-            <h2 className="text-2xl font-bold text-white mb-2">Assets Approved!</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-white mb-1 sm:mb-2">Assets Approved!</h2>
             
             {/* Status message */}
-            <p className="text-gray-400">Your assets have been approved successfully</p>
+            <p className="text-gray-400 text-sm sm:text-base">Your assets have been approved successfully</p>
           </div>
         </div>
       )}
 
-      <div className="bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-700 w-full">
+      <div className="bg-gray-800 rounded-xl shadow-lg p-4 sm:p-8 border border-gray-700 w-full">
         <button
           onClick={() => setMediaGenerated(false)} // Go back to script view
-          className="mb-6 text-gray-400 hover:text-white flex items-center"
+          className="mb-4 sm:mb-6 text-gray-400 hover:text-white flex items-center"
         >
           <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
           Generate New Media
         </button>
-        <h2 className="text-2xl font-bold text-white mb-4">Assets from the script</h2>
+        <h2 className="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-4">Assets from the script</h2>
         
         {/* Thumbnails section */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-bold text-white">Thumbnails <span className="text-gray-400 text-sm">{(localThumbnails.length + (generatedMedia.thumbnails?.length || 0)) > 0 ? `(${localThumbnails.length + (generatedMedia.thumbnails?.length || 0)})` : ''}</span></h3>
+            <h3 className="text-lg sm:text-xl font-bold text-white">Thumbnails <span className="text-gray-400 text-xs sm:text-sm">{(localThumbnails.length + (generatedMedia.thumbnails?.length || 0)) > 0 ? `(${localThumbnails.length + (generatedMedia.thumbnails?.length || 0)})` : ''}</span></h3>
             <label className="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg cursor-pointer hover:bg-red-700 transition-colors duration-200 font-semibold text-sm gap-2">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" /></svg>
               Upload
               <input type="file" accept="image/*" className="hidden" onChange={e => handleUpload(e, 'thumbnails')} />
             </label>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {localThumbnails.map((thumbnail, index) => (
               <div key={index} className="bg-gray-700 rounded-lg overflow-hidden shadow-md relative">
                 <button onClick={() => handleDeleteLocalThumbnail(index)} className="absolute top-2 right-2 bg-red-700 hover:bg-red-800 text-white rounded-full p-1 z-10" title="Delete thumbnail">
@@ -231,10 +231,10 @@ export default function AssetSection({
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
-                <img src={thumbnail.fileId ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/proxy/${thumbnail.fileId}` : thumbnail.src} alt={thumbnail.alt} className="w-full h-48 object-cover" crossOrigin="anonymous" />
-                <div className="p-4">
-                  <p className="text-white font-semibold flex items-center gap-2">{thumbnail.alt}</p>
-                  <p className="text-gray-400 text-sm mt-1">{thumbnail.date}</p>
+                <img src={thumbnail.fileId ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/proxy/${thumbnail.fileId}` : thumbnail.src} alt={thumbnail.alt} className="w-full h-36 sm:h-48 object-cover" crossOrigin="anonymous" />
+                <div className="p-2 sm:p-4">
+                  <p className="text-white font-semibold flex items-center gap-2 text-xs sm:text-base">{thumbnail.alt}</p>
+                  <p className="text-gray-400 text-xs sm:text-sm mt-1">{thumbnail.date}</p>
                 </div>
               </div>
             ))}
@@ -246,8 +246,8 @@ export default function AssetSection({
                       <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </button>
-                  <img src={thumbnail.fileId ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/proxy/${thumbnail.fileId}` : thumbnail.src} alt={thumbnail.alt} className="w-full h-48 object-cover" crossOrigin="anonymous" />
-                  <div className="p-4">
+                  <img src={thumbnail.fileId ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/proxy/${thumbnail.fileId}` : thumbnail.src} alt={thumbnail.alt} className="w-full h-36 sm:h-48 object-cover" crossOrigin="anonymous" />
+                  <div className="p-2 sm:p-4">
                     <p className="text-white font-semibold flex items-center gap-2">
                       {thumbnail.alt}
                       <button

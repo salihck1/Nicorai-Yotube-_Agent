@@ -59,7 +59,7 @@ export default function Home() {
     topic: '',
     tone: 'Professional',
     genre: 'Educational',
-    time: '20',
+    time: '1 minute',
   })
   const [avatarScript, setAvatarScript] = useState('');
   const [avatarEditedScript, setAvatarEditedScript] = useState('');
@@ -892,7 +892,7 @@ export default function Home() {
 
 
   return (
-    <main className="min-h-[calc(100vh-64px)] flex flex-col items-center justify-center p-4 pt-20">
+    <div className="w-full min-h-screen px-2 sm:px-4">
       <Drawer
       defaultTab={defaultTab}
         newProject={
@@ -1220,7 +1220,7 @@ export default function Home() {
         pendingUploads={<PendingUploadsTab />}
         uploadedVideos={<UploadedVideosTab />}
       />
-    </main>
+    </div>
   );
 }
 
