@@ -122,7 +122,12 @@ const ProcessingToast = () => {
                 marginLeft: 2
               }}
               onClick={() => {
-                router.push(`/?tab=${processedTab}`);
+                // If the completed process was in the pending tab, redirect to uploaded tab
+                if (processedTab === 'pending') {
+                  router.push('/?tab=uploaded');
+                } else {
+                  router.push(`/?tab=${processedTab}`);
+                }
                 setProcessedTab(null);
               }}
             >

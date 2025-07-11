@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useProcessing } from './ProcessingContext';
 
 interface PendingProject {
   _id: string;
@@ -36,6 +37,7 @@ export default function PendingUploadsTab() {
   const [uploadedVideoFiles, setUploadedVideoFiles] = useState<{ [projectId: string]: File }>({});
   const [uploading, setUploading] = useState<{ [projectId: string]: boolean }>({});
   const fileInputs = useRef<{ [projectId: string]: HTMLInputElement | null }>({});
+  const { setIsProcessing, setMessage, setProcessedTab } = useProcessing();
 
   useEffect(() => {
     setLoading(true);
@@ -71,6 +73,9 @@ export default function PendingUploadsTab() {
   };
 
   const handleUploadNow = async (projectId: string, videoUrlFromDb?: string) => {
+    setIsProcessing(true);
+    setMessage('Uploading to YouTube...');
+    setProcessedTab('pending');
     let file = uploadedVideoFiles[projectId];
     const proxyUpload = proxyAvatarUploads.find(p => p._id === projectId);
     if (!file && proxyUpload) {
@@ -110,6 +115,7 @@ export default function PendingUploadsTab() {
         alert('Upload failed: ' + (err as Error).message);
       } finally {
         setUploading(prev => { const copy = { ...prev }; delete copy[projectId]; return copy; });
+        setIsProcessing(false);
       }
       return;
     }
@@ -158,6 +164,8 @@ export default function PendingUploadsTab() {
     } catch (err) {
       alert('Upload failed: ' + (err as Error).message);
       setUploading(prev => { const copy = { ...prev }; delete copy[projectId]; return copy; });
+    } finally {
+      setIsProcessing(false);
     }
   };
 
