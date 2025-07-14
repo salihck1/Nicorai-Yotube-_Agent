@@ -170,25 +170,25 @@ export default function PendingUploadsTab() {
   };
 
   return (
-    <div className="w-full max-w-4xl bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-700 flex flex-col items-center min-h-[400px]">
-      <h2 className="text-3xl font-bold text-white mb-2 text-center">Pending Uploads</h2>
-      <p className="text-gray-300 mb-8 text-center">Your videos that are waiting to be uploaded to YouTube</p>
+    <div className="w-full max-w-full sm:max-w-2xl md:max-w-4xl bg-gray-800 rounded-xl shadow-lg p-4 sm:p-6 md:p-8 border border-gray-700 flex flex-col items-center min-h-[400px]">
+      <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2 text-center">Pending Uploads</h2>
+      <p className="text-gray-300 mb-6 sm:mb-8 text-center">Your videos that are waiting to be uploaded to YouTube</p>
       {loading ? (
         <p className="text-gray-400">Loading...</p>
       ) : error ? (
         <p className="text-red-400">{error}</p>
       ) : (pendingProjects.length === 0 && proxyAvatarUploads.length === 0) ? (
-        <div className="flex flex-col items-center justify-center w-full py-16">
+        <div className="flex flex-col items-center justify-center w-full py-12 sm:py-16">
           <svg className="w-16 h-16 text-gray-500 mb-4" fill="none" viewBox="0 0 48 48" width="64" height="48" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="12" width="32" height="28" rx="3" fill="#6B7280"/><path d="M8 15a3 3 0 0 1 3-3h7.172a3 3 0 0 1 2.121.879l2.828 2.828A3 3 0 0 0 25.243 16H40a3 3 0 0 1 3 3v18a3 3 0 0 1-3 3H11a3 3 0 0 1-3-3V15Z" fill="#9CA3AF"/></svg>
           <p className="text-gray-400 text-lg font-semibold">No pending projects to upload!</p>
         </div>
       ) : (
-        <div className="w-full flex flex-col gap-6">
+        <div className="w-full flex flex-col gap-4 sm:gap-6">
           {/* Render ProxyAvatarUploads first */}
           {proxyAvatarUploads.map(upload => (
-            <div key={upload._id} className="flex flex-col md:flex-row items-center bg-gray-700 rounded-lg p-6 mb-2 shadow border border-gray-600">
+            <div key={upload._id} className="flex flex-col md:flex-row items-center bg-gray-700 rounded-lg p-4 sm:p-6 mb-2 shadow border border-gray-600">
               {/* Video Upload/Preview */}
-              <div className="flex flex-col items-center justify-center w-64 h-40 bg-gray-600 rounded-md mr-0 md:mr-8 mb-4 md:mb-0 relative">
+              <div className="flex flex-col items-center justify-center w-full max-w-xs sm:max-w-sm md:w-64 aspect-video bg-gray-600 rounded-md mr-0 md:mr-8 mb-4 md:mb-0 relative">
                 {uploadedVideos[upload._id] ? (
                   <>
                     <video src={uploadedVideos[upload._id]} controls className="w-full h-full rounded-md object-contain bg-black" />
@@ -237,17 +237,17 @@ export default function PendingUploadsTab() {
                 )}
               </div>
               {/* Info and Upload Button */}
-              <div className="flex-1 flex flex-col md:flex-row md:items-center md:justify-between w-full">
-                <div>
-                  <div className="text-xl font-semibold text-white mb-2">{upload.title || upload.topic}</div>
-                  <div className="text-gray-400 text-sm mb-2">{upload.createdAt ? new Date(upload.createdAt).toLocaleString() : ''}</div>
+              <div className="flex-1 min-w-0 flex flex-col md:flex-row md:items-center md:justify-between w-full">
+                <div className="min-w-0">
+                  <div className="text-lg sm:text-xl font-semibold text-white mb-2 break-words">{upload.title || upload.topic}</div>
+                  <div className="text-gray-400 text-xs sm:text-sm mb-2">{upload.createdAt ? new Date(upload.createdAt).toLocaleString() : ''}</div>
                   <div className="text-gray-300 mb-2">Status: <span className="text-frey-300">Pending</span></div>
                   {upload.drive && upload.drive.url && (
-                    <a href={upload.drive.url} target="_blank" rel="noopener noreferrer" className="text-red-400 underline text-sm">View Drive Link</a>
+                    <a href={upload.drive.url} target="_blank" rel="noopener noreferrer" className="text-red-400 underline text-xs sm:text-sm">View Drive Link</a>
                   )}
                 </div>
                 <button
-                  className="mt-4 md:mt-0 md:ml-8 px-6 py-2 bg-red-500 text-white rounded font-semibold text-base hover:bg-red-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="mt-4 md:mt-0 md:ml-8 px-4 sm:px-6 py-2 bg-red-500 text-white rounded font-semibold text-sm sm:text-base hover:bg-red-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={uploading[upload._id]}
                   onClick={() => handleUploadNow(upload._id, upload.video && upload.video.url)}
                 >
@@ -258,9 +258,9 @@ export default function PendingUploadsTab() {
           ))}
           {/* Render ScriptHistory pending projects */}
           {pendingProjects.map(project => (
-            <div key={project._id} className="flex flex-col md:flex-row items-center bg-gray-700 rounded-lg p-6 mb-2 shadow border border-gray-600">
+            <div key={project._id} className="flex flex-col md:flex-row items-center bg-gray-700 rounded-lg p-4 sm:p-6 mb-2 shadow border border-gray-600">
               {/* Video Upload/Preview */}
-              <div className="flex flex-col items-center justify-center w-64 h-40 bg-gray-600 rounded-md mr-0 md:mr-8 mb-4 md:mb-0 relative">
+              <div className="flex flex-col items-center justify-center w-full max-w-xs sm:max-w-sm md:w-64 aspect-video bg-gray-600 rounded-md mr-0 md:mr-8 mb-4 md:mb-0 relative">
                 {uploadedVideos[project._id] ? (
                   <>
                     <video src={uploadedVideos[project._id]} controls className="w-full h-full rounded-md object-contain bg-black" />
@@ -292,18 +292,18 @@ export default function PendingUploadsTab() {
                 )}
               </div>
               {/* Project Info and Upload Button */}
-              <div className="flex-1 flex flex-col md:flex-row md:items-center md:justify-between w-full">
-                <div>
-                  <div className="text-xl font-semibold text-white mb-2">{project.topic}</div>
-                  <div className="text-gray-400 text-sm mb-2">{project.timestamp ? new Date(project.timestamp).toLocaleString() : ''}</div>
+              <div className="flex-1 min-w-0 flex flex-col md:flex-row md:items-center md:justify-between w-full">
+                <div className="min-w-0">
+                  <div className="text-lg sm:text-xl font-semibold text-white mb-2 break-words">{project.topic}</div>
+                  <div className="text-gray-400 text-xs sm:text-sm mb-2">{project.timestamp ? new Date(project.timestamp).toLocaleString() : ''}</div>
                   <div className="text-gray-300 mb-2">Status: <span className="text-grey-300">Pending</span></div>
                   {project.driveLink && (
-                    <a href={project.driveLink} target="_blank" rel="noopener noreferrer" className="text-red-400 underline text-sm">View Drive Link</a>
+                    <a href={project.driveLink} target="_blank" rel="noopener noreferrer" className="text-red-400 underline text-xs sm:text-sm">View Drive Link</a>
                   )}
                 </div>
                 {uploadedVideos[project._id] && (
                   <button
-                    className="mt-4 md:mt-0 md:ml-8 px-6 py-2 bg-red-500 text-white rounded font-semibold text-base hover:bg-red-600 transition-colors duration-200"
+                    className="mt-4 md:mt-0 md:ml-8 px-4 sm:px-6 py-2 bg-red-500 text-white rounded font-semibold text-sm sm:text-base hover:bg-red-600 transition-colors duration-200"
                     disabled={uploading[project._id]}
                     onClick={() => handleUploadNow(project._id)}
                   >

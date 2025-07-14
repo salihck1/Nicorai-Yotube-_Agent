@@ -1134,16 +1134,16 @@ export default function Home() {
                 {/* Avatar selection section */}
                 <div className="w-full max-w-4xl mt-8 flex flex-col items-center">
                   <h3 className="text-xl font-bold text-white mb-4">Select an Avatar</h3>
-                  <div className="flex gap-6 justify-center">
+                  <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-4 sm:gap-6 justify-center w-full">
                     {avatarImages.map((src, idx) => (
-                      <div key={src} className="flex flex-col items-center">
+                      <div key={src} className="flex flex-col items-center mb-4">
                         <button
                           className={`rounded-full border-4 transition-all duration-200 ${selectedAvatar === src ? 'border-red-500 scale-110' : 'border-transparent'} focus:outline-none`}
                           onClick={() => { setSelectedAvatar(src); setSelectedAvatarId(avatarIds[idx]); setSelectedVoiceId(voiceIds[idx]); }}
                         >
-                          <img src={src} alt={avatarNames[idx]} className="w-32 h-32 rounded-full object-cover" />
+                          <img src={src} alt={avatarNames[idx]} className="w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full object-cover" />
                         </button>
-                        <span className="mt-2 text-white font-medium text-lg">{avatarNames[idx]}</span>
+                        <span className="mt-2 text-white font-medium text-base sm:text-lg text-center break-words max-w-[6rem] sm:max-w-[7rem] md:max-w-[8rem]">{avatarNames[idx]}</span>
                       </div>
                     ))}
                   </div>
