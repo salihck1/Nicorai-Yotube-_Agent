@@ -55,14 +55,12 @@ router.post('/', upload.single('video'), async (req, res) => {
         body: require('stream').Readable.from(file.buffer),
       },
       fields: 'id, webViewLink, webContentLink',
+      supportsAllDrives: true, // Added for Shared Drive support
     });
     const videoFileId = driveResponse.data.id;
     const videoLink = `${process.env.GOOGLE_DRIVE_VIEW_URL}/${videoFileId}/view`;
     // Share file with anyone with the link
-    await drive.permissions.create({
-      fileId: videoFileId,
-      requestBody: { role: 'reader', type: 'anyone' },
-    });
+    // Removed drive.permissions.create as folder already allows public viewing
     // Notify n8n
     const n8nPayload = {
       projectId,

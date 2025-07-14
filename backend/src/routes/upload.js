@@ -57,16 +57,11 @@ router.post('/:type', upload.single('file'), async (req, res) => {
         body: Readable.from(file.buffer),
       },
       fields: 'id, name',
+      supportsAllDrives: true, // Added for Shared Drive support
     });
 
     // Make the file readable by anyone with the link
-    await drive.permissions.create({
-      fileId: driveRes.data.id,
-      requestBody: {
-        role: 'reader',
-        type: 'anyone',
-      },
-    });
+    // Removed drive.permissions.create as folder already allows public viewing
 
     // Get the web link
     const fileLink = `${process.env.GOOGLE_DRIVE_VIEW_URL}/${driveRes.data.id}/view`;
